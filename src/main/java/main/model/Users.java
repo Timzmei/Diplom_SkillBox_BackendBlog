@@ -10,32 +10,34 @@ public class Users
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
+    @Column(columnDefinition = "int NOT NULL COMMENT 'id пользователя'")
     private int id;
 
-    @Column(name = "is_moderator", columnDefinition = "tinyint")
+    @Column(name = "is_moderator", columnDefinition = "tinyint NOT NULL COMMENT 'является ли пользователь модератором (может ли править\n" +
+            "глобальные настройки сайта и модерировать посты)'")
     @NotNull
     private int isModerator;
 
-    @Column(name = "reg_time", columnDefinition = "datetime")
+    @Column(name = "reg_time", columnDefinition = "datetime NOT NULL COMMENT 'дата и время регистрации пользователя'")
     @NotNull
     private Date regTime;
 
-    @Column(columnDefinition = "varchar(255)")
+    @Column(columnDefinition = "varchar(255) NOT NULL COMMENT 'имя пользователя'")
     @NotNull
     private String name;
 
-    @Column(columnDefinition = "varchar(255)")
+    @Column(columnDefinition = "varchar(255) NOT NULL COMMENT 'e-mail пользователя'")
     @NotNull
     private String email;
 
-    @Column(columnDefinition = "varchar(255)")
+    @Column(columnDefinition = "varchar(255) NOT NULL COMMENT 'хэш пароля пользователя'")
     @NotNull
     private String password;
 
-    @Column(columnDefinition = "varchar(255)")
+    @Column(columnDefinition = "varchar(255) NOT NULL COMMENT 'код для восстановления пароля'")
     private String code;
 
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "text NOT NULL COMMENT 'ссылка на фотографию'")
     private String photo;
 
     public int getId() {

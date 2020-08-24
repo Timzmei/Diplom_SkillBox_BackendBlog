@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-public class Users
+public class User
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

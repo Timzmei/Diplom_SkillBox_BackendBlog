@@ -3,9 +3,10 @@ package main.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-public class Posts
+public class Post
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,14 +22,16 @@ public class Posts
     @NotNull
     private ModerationStatus moderationStatus;
 
-    @Column(name = "moderator_id", columnDefinition = "integer")
-    private int moderatorId;
+    @ManyToOne(cascade = CascadeType.ALL, fetch =FetchType.LAZY)
+    @JoinColumn(name = "moderator_id")
+//    @Column(name = "moderator_id", columnDefinition = "integer")
+    private User moderator;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch =FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable=false)
 //    @Column(name = "user_id")
 //    @NotNull
-    private Users users;
+    private User user;
 
     @NotNull
     private Date time;
@@ -45,6 +48,21 @@ public class Posts
     @NotNull
     private int viewCount;
 
+    @Transient
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "Tags2Post",
+            joinColumns = {@JoinColumn(name = "post_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id")}
+    )
+    private List<Tag> tags;
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
 
     public int getId() {
         return id;
@@ -66,20 +84,20 @@ public class Posts
         this.moderationStatus = moderationStatus;
     }
 
-    public int getModeratorId() {
-        return moderatorId;
+    public User getModeratorId() {
+        return moderator;
     }
 
-    public void setModeratorId(int moderatorId) {
-        this.moderatorId = moderatorId;
+    public void setModeratorId(User moderatorId) {
+        this.moderator = moderatorId;
     }
 
-    public Users getUserId() {
-        return users;
+    public User getUserId() {
+        return user;
     }
 
-    public void setUserId(Users userId) {
-        this.users = userId;
+    public void setUserId(User userId) {
+        this.user = userId;
     }
 
     public Date getTime() {

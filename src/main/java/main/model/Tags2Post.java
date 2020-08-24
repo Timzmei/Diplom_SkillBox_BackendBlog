@@ -19,7 +19,7 @@ public class Tags2Post {
     @JoinColumn(name = "post_id", nullable=false)
 //    @Column(name = "post_id")
 //    @NotNull
-    private Posts posts;
+    private Post post;
 
     @OneToOne(
             fetch = FetchType.LAZY,
@@ -28,7 +28,7 @@ public class Tags2Post {
     @JoinColumn(name = "tag_id", nullable=false)
 //    @Column(name = "tag_id")
 //    @NotNull
-    private Tags tags;
+    private Tag tag;
 
     public int getId() {
         return id;
@@ -38,19 +38,19 @@ public class Tags2Post {
         this.id = id;
     }
 
-    public Posts getPostId() {
-        return posts;
+    public Post getPostId() {
+        return post;
     }
 
-    public void setPostId(Posts postId) {
-        this.posts = postId;
+    public void setPostId(Post postId) {
+        this.post = postId;
     }
 
-    public Tags getTagId() {
-        return tags;
+    public Tag getTagId() {
+        return tag;
     }
 
-    public void setTagId(Tags tagId) {
-        this.tags = tagId;
+    public void setTagId(Tag tagId) {
+        this.tag = tagId;
     }
 }

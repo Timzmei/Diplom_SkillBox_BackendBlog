@@ -56,6 +56,35 @@ public class Post
     )
     private List<Tag> tags;
 
+    @Transient
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "PostVotes",
+            joinColumns = {@JoinColumn(name = "post_id")},
+            inverseJoinColumns = {@JoinColumn(name = "value")}
+    )
+
+    private List<Byte> like;
+
+    @Transient
+    @OneToMany(cascade = CascadeType.ALL, fetch =FetchType.LAZY)
+    private List<PostComments> comments;
+
+    public List<Byte> getLike() {
+        return like;
+    }
+
+    public void setLike(List<Byte> like) {
+        this.like = like;
+    }
+
+    public List<PostComments> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<PostComments> comments) {
+        this.comments = comments;
+    }
+
     public List<Tag> getTags() {
         return tags;
     }

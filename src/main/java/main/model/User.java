@@ -34,10 +34,10 @@ public class User
     @NotNull
     private String password;
 
-    @Column(columnDefinition = "varchar(255) NOT NULL COMMENT 'код для восстановления пароля'")
+    @Column(columnDefinition = "varchar(255) COMMENT 'код для восстановления пароля'")
     private String code;
 
-    @Column(columnDefinition = "text NOT NULL COMMENT 'ссылка на фотографию'")
+    @Column(columnDefinition = "text COMMENT 'ссылка на фотографию'")
     private String photo;
 
     public int getId() {

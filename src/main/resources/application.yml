@@ -15,9 +15,9 @@ spring:
 blog:
   title: DevPub
   subtitle: Рассказы разработчиков
-  phone: +7 903 666-44-55
+  phone: +7 903 111-11-11
   email: mail@mail.ru"
-  copyright: Дмитрий Сергеев
+  copyright: <Буратино Карлович>
   copyrightFrom: 2005
 #spring.jpa.properties.hibernate.validator.apply_to_ddl=false
 

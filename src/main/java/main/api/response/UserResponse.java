@@ -9,6 +9,7 @@ public class UserResponse {
     private int id;
     private String name;
 
+
     public UserResponse(Post post) {
         id = post.getUserId().getId();
         name = post.getUserId().getName();

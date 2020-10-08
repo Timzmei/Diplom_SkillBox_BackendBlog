@@ -8,8 +8,6 @@ import java.util.List;
 
 @Component
 public class PostResponse {
-    private Post post;
-
     private int id;
     private long timestamp;
     private UserResponse user;

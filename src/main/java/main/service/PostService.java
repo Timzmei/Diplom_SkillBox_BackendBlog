@@ -18,16 +18,19 @@ public class PostService implements IPostService {
 
     @Override
     public ApiPostResponse findPaginated(int pageNo, int pageSize) {
-        PostResponse postResponse = new PostResponse();
-        ApiPostResponse apiPostResponse = null;
+//        PostResponse postResponse = new PostResponse();
+        ApiPostResponse apiPostResponse = new ApiPostResponse();
 
-//        Page<PostResponse> page = postsRepo.findAll(PageRequest.of(offset, limit));
-//
-//        page.getTotalElements();
+        Iterable<Post> pages = repository.findAll();
+
+        Page<Post> page = repository.findAll(pageable);
+
+
         Pageable paging = PageRequest.of(pageNo, pageSize);
-        Page<Post> pagedResult = repository.findAll(paging);
+        Page<Post> pagedResult = (Page<Post>) repository.findAll();
+
         apiPostResponse.setCount(pagedResult);
-        apiPostResponse.setPosts(postResponse);
+        apiPostResponse.setPosts(page.getContent());
 
         return apiPostResponse;
     }

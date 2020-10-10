@@ -1,12 +1,13 @@
 package main.api.response;
 
 import main.model.Post;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.beans.Expression;
 import java.util.List;
 
-@Component
+
 public class PostResponse {
     private int id;
     private long timestamp;
@@ -18,6 +19,17 @@ public class PostResponse {
     private int viewCount;
 
 
+
+    public PostResponse(Post post) {
+        this.id = post.getId();
+        this.timestamp = post.getTime().getTime();
+        this.user = new UserResponse(post);
+        this.title = post.getTitle();
+        this.announce = post.getText().substring(0, 50);
+        this.likeCount = setLikeCount(post);
+        this.dislikeCount = setDislikeCount(post);
+        this.viewCount = post.getViewCount();
+    }
 
     public int getId() {
         return id;
@@ -63,30 +75,33 @@ public class PostResponse {
         return likeCount;
     }
 
-    public void setLikeCount(Post post) {
+    public int setLikeCount(Post post) {
         int count = 0;
         List<Byte> like = post.getLike();
-        for(int i : like)
-        {
-            if (i == 1)
-                count += 1;
+        if(!(like == null)) {
+            for (int i : like) {
+                if (i == 1)
+                    count += 1;
+            }
         }
-        this.likeCount = count;
+        return count;
     }
 
     public int getDislikeCount() {
         return dislikeCount;
     }
 
-    public void setDislikeCount(Post post) {
+    public int setDislikeCount(Post post) {
         int count = 0;
         List<Byte> like = post.getLike();
-        for(int i : like)
-        {
-            if (i == -1)
-                count += 1;
+        if(!(like == null)) {
+
+            for (int i : like) {
+                if (i == -1)
+                    count += 1;
+            }
         }
-        this.dislikeCount = count;
+        return count;
     }
 
     public int getViewCount() {

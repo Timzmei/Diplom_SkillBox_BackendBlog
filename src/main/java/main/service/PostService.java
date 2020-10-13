@@ -1,34 +1,59 @@
 package main.service;
 
-import main.api.response.ApiPostResponse;
 import main.api.response.PostResponse;
+import main.api.response.PostsResponse;
 import main.model.Post;
-import main.model.repo.PostsRepo;
+import main.model.repo.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+
 @Service
-public class PostService implements IPostService {
+public class PostService {
 
     @Autowired
-    private PostsRepo repository;
+    private PostRepository postRepository;
 
-    @Override
-    public ApiPostResponse findPaginated(int pageNo, int pageSize) {
-        PostResponse postResponse = new PostResponse();
-        ApiPostResponse apiPostResponse = null;
+    public PostsResponse getPosts(int offset, int limit, String mode) {
+        // тут пишем уже выбор запроса из репозитория по mode, простые if
+        // и собираем объект Pagable для пагинации, после получения данных постав
 
-//        Page<PostResponse> page = postsRepo.findAll(PageRequest.of(offset, limit));
-//
-//        page.getTotalElements();
-        Pageable paging = PageRequest.of(pageNo, pageSize);
-        Page<Post> pagedResult = repository.findAll(paging);
-        apiPostResponse.setCount(pagedResult);
-        apiPostResponse.setPosts(postResponse);
 
-        return apiPostResponse;
+        Pageable pageable = PageRequest.of(offset, limit, Sort.Direction.ASC, "id");
+
+//        @Deprecated
+//        Pageable pageable = new PageRequest(offset, limit);
+
+//        Pageable pageable = PageRequest.of(offset, limit);
+
+
+
+        Collection<Post> page = postRepository.getRecentPosts();
+//        List<Post> listPost = page.getContent();
+        List<PostResponse> postResponseList = new ArrayList<>();
+
+        for (Post p : page) {
+
+            postResponseList.add(new PostResponse(p));
+
+        }
+
+
+
+        PostsResponse postsResponse = new PostsResponse();
+        postsResponse.setPosts(postResponseList);
+        postsResponse.setCount((int) page.size());
+
+
+        return postsResponse;
     }
 }

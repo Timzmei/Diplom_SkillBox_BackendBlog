@@ -6,94 +6,89 @@ import org.springframework.stereotype.Component;
 import java.beans.Expression;
 import java.util.List;
 
-@Component
+
 public class PostResponse {
-    private int id;
+    private long id;
+    private int isActive;
+    private long moderatorId;
+    private String text;
     private long timestamp;
-    private UserResponse user;
     private String title;
-    private String announce;
-    private int likeCount;
-    private int dislikeCount;
-    private int viewCount;
+    private UserPostResponse user;
+    private long viewCount;
 
+    public PostResponse(Post post) {
+        this.id = post.getId();
+        this.isActive = post.getIsActive();
+        this.moderatorId = post.getModeratorId().getId();
+        this.text = post.getText();
+        this.timestamp = post.getTime().getTime();
+        this.title = post.getTitle();
+        this.user = new UserPostResponse(post.getUserId());
+        this.viewCount = post.getViewCount();
+    }
 
-
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Post post) {
-        this.id = post.getId();
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public int getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
+    }
+
+    public long getModeratorId() {
+        return moderatorId;
+    }
+
+    public void setModeratorId(long moderatorId) {
+        this.moderatorId = moderatorId;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Post post) {
-        this.timestamp = post.getTime().getTime();
-    }
-
-    public UserResponse getUser() {
-        return user;
-    }
-
-    public void setUser(Post post) {
-        this.user = new UserResponse(post);
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(Post post) {
-        this.title = post.getTitle();
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getAnnounce() {
-        return announce;
+    public UserPostResponse getUser() {
+        return user;
     }
 
-    public void setAnnounce(Post post) {
-        this.announce = post.getText().substring(0, 50);
+    public void setUser(UserPostResponse user) {
+        this.user = user;
     }
 
-    public int getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(Post post) {
-        int count = 0;
-        List<Byte> like = post.getLike();
-        for(int i : like)
-        {
-            if (i == 1)
-                count += 1;
-        }
-        this.likeCount = count;
-    }
-
-    public int getDislikeCount() {
-        return dislikeCount;
-    }
-
-    public void setDislikeCount(Post post) {
-        int count = 0;
-        List<Byte> like = post.getLike();
-        for(int i : like)
-        {
-            if (i == -1)
-                count += 1;
-        }
-        this.dislikeCount = count;
-    }
-
-    public int getViewCount() {
+    public long getViewCount() {
         return viewCount;
     }
 
-    public void setViewCount(Post post) {
-        this.viewCount = post.getViewCount();
+    public void setViewCount(long viewCount) {
+        this.viewCount = viewCount;
     }
 }

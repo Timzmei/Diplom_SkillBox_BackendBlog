@@ -28,7 +28,7 @@ public class PostService {
         // и собираем объект Pagable для пагинации, после получения данных постав
 
 
-        Pageable pageable = PageRequest.of(offset, limit, Sort.Direction.ASC, "id");
+        Pageable pageable = PageRequest.of(offset, limit, Sort.by("time"));
 
 //        @Deprecated
 //        Pageable pageable = new PageRequest(offset, limit);
@@ -37,8 +37,8 @@ public class PostService {
 
 
 
-        Collection<Post> page = postRepository.getRecentPosts();
-//        List<Post> listPost = page.getContent();
+        Page<Post> page = postRepository.findAll(pageable);
+        List<Post> listPost = postRepository.getRecentPosts();
         List<PostResponse> postResponseList = new ArrayList<>();
 
         for (Post p : page) {
@@ -51,7 +51,7 @@ public class PostService {
 
         PostsResponse postsResponse = new PostsResponse();
         postsResponse.setPosts(postResponseList);
-        postsResponse.setCount((int) page.size());
+        postsResponse.setCount(listPost.size());
 
 
         return postsResponse;

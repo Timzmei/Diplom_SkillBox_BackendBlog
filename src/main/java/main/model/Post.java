@@ -69,6 +69,7 @@ public class Post
     @OneToMany(cascade = CascadeType.ALL, fetch =FetchType.LAZY)
     private List<PostComments> comments;
 
+
     public List<Byte> getLike() {
         return like;
     }

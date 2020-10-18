@@ -28,7 +28,38 @@ public class PostService {
         // и собираем объект Pagable для пагинации, после получения данных постав
 
 
-        Pageable pageable = PageRequest.of(offset, limit, Sort.by("time"));
+//        mode - режим вывода (сортировка):
+//        recent - сортировать по дате публикации, выводить сначала новые
+//        popular - сортировать по убыванию количества комментариев
+//        best - сортировать по убыванию количества лайков
+//        early - сортировать по дате публикации, выводить сначала старые
+
+        Pageable pageable;
+        pageable = PageRequest.of(offset, limit, Sort.by("time").descending());
+
+
+        if (mode.equals("recent")){
+
+            pageable = PageRequest.of(offset, limit, Sort.by("comments.size").descending());
+
+        }
+        else {
+            if (mode.equals("best")) {
+
+                pageable = PageRequest.of(offset, limit, Sort.by("like.size").descending());
+
+            }
+            else {
+                if (mode.equals("early")) {
+
+                    pageable = PageRequest.of(offset, limit, Sort.by("time"));
+
+
+                }
+            }
+        }
+
+//        Pageable pageable = PageRequest.of(offset, limit, Sort.by("time"));
 
 //        @Deprecated
 //        Pageable pageable = new PageRequest(offset, limit);
@@ -40,6 +71,8 @@ public class PostService {
         Page<Post> page = postRepository.findAll(pageable);
         List<Post> listPost = postRepository.getRecentPosts();
         List<PostResponse> postResponseList = new ArrayList<>();
+
+
 
         for (Post p : page) {
 

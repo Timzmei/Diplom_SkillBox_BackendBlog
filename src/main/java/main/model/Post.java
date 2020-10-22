@@ -66,7 +66,7 @@ public class Post
     private List<Byte> like;
 
     @Transient
-    @OneToMany(cascade = CascadeType.ALL, fetch =FetchType.LAZY)
+    @OneToMany(mappedBy="post_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PostComments> comments;
 
 

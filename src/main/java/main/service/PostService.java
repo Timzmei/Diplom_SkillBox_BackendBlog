@@ -3,12 +3,14 @@ package main.service;
 import main.api.response.PostResponse;
 import main.api.response.PostsResponse;
 import main.model.Post;
+import main.model.PostComments;
 import main.model.repo.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,58 +36,39 @@ public class PostService {
 //        best - сортировать по убыванию количества лайков
 //        early - сортировать по дате публикации, выводить сначала старые
 
+
         Pageable pageable;
-        pageable = PageRequest.of(offset, limit, Sort.by("time").descending());
+        pageable = PageRequest.of(offset, limit);
 
+        List<Post> listPost = postRepository.findAllPosts();
+        Page<Post> pageOfTags = postRepository.findAllOrderByTimeDesc(pageable);
 
-        if (mode.equals("recent")){
-
-            pageable = PageRequest.of(offset, limit, Sort.by("comments.size").descending());
-
+        if (mode.equals("popular")) {
+            pageOfTags = postRepository.findAllOrderByCommentsDesc(pageable);
         }
         else {
             if (mode.equals("best")) {
-
-                pageable = PageRequest.of(offset, limit, Sort.by("like.size").descending());
-
+                pageOfTags = postRepository.findAllOrderByVotesDesc(pageable);
             }
             else {
                 if (mode.equals("early")) {
-
-                    pageable = PageRequest.of(offset, limit, Sort.by("time"));
-
-
+                    pageOfTags = postRepository.findAllOrderByTime(pageable);
                 }
             }
         }
 
-//        Pageable pageable = PageRequest.of(offset, limit, Sort.by("time"));
+        return createPostsResponse(pageOfTags, listPost);
+    }
 
-//        @Deprecated
-//        Pageable pageable = new PageRequest(offset, limit);
+    private PostsResponse createPostsResponse(Page<Post> pageOfTags, List<Post> listPost){
 
-//        Pageable pageable = PageRequest.of(offset, limit);
-
-
-
-        Page<Post> page = postRepository.findAll(pageable);
-        List<Post> listPost = postRepository.getRecentPosts();
         List<PostResponse> postResponseList = new ArrayList<>();
-
-
-
-        for (Post p : page) {
-
+        for (Post p : pageOfTags) {
             postResponseList.add(new PostResponse(p));
-
         }
-
-
-
         PostsResponse postsResponse = new PostsResponse();
         postsResponse.setPosts(postResponseList);
         postsResponse.setCount(listPost.size());
-
 
         return postsResponse;
     }

@@ -4,28 +4,100 @@ import main.model.Post;
 import org.springframework.stereotype.Component;
 
 import java.beans.Expression;
+import java.util.LinkedList;
 import java.util.List;
 
 
 public class PostResponse {
     private long id;
-    private int isActive;
-    private long moderatorId;
-    private String text;
     private long timestamp;
-    private String title;
     private UserPostResponse user;
+    private String title;
+    private String announce;
+    private long likeCount;
+    private long dislikeCount;
+    private long commentCount;
     private long viewCount;
 
     public PostResponse(Post post) {
         this.id = post.getId();
-        this.isActive = post.getIsActive();
-        this.moderatorId = post.getModeratorId().getId();
-        this.text = post.getText();
         this.timestamp = post.getTime().getTime();
-        this.title = post.getTitle();
         this.user = new UserPostResponse(post.getUserId());
+        this.title = post.getTitle();
+        this.announce = post.getText();
+        this.likeCount = getLikeCount(post);
+        this.likeCount = getDislikeCount(post);
+
+        this.commentCount = setCommentCount(post);
         this.viewCount = post.getViewCount();
+    }
+
+    public String getAnnounce() {
+        return announce;
+    }
+
+    public void setAnnounce(String announce) {
+        this.announce = announce;
+    }
+
+    public long getLikeCount(Post post) {
+        likeCount = 0;
+
+        if(!(post.getLike() == null)) {
+            LinkedList<Byte> like = new LinkedList<>();
+            like.addAll(post.getLike());
+            for (Byte l : like
+            ) {
+                if (l == 1) {
+                    likeCount++;
+                }
+
+            }
+        }
+
+        return likeCount;
+    }
+
+    public void setLikeCount(long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public long getDislikeCount(Post post) {
+        dislikeCount = 0;
+
+        if(!(post.getLike() == null)) {
+
+            LinkedList<Byte> like = new LinkedList<>();
+            like.addAll(post.getLike());
+            for (Byte l : like
+            ) {
+                if (l == 0) {
+                    dislikeCount++;
+                }
+
+            }
+        }
+        return dislikeCount;
+    }
+
+    public void setDislikeCount(long dislikeCount) {
+        this.dislikeCount = dislikeCount;
+    }
+
+    public long getCommentCount() {
+        return commentCount;
+    }
+
+    public long setCommentCount(Post post) {
+
+        if(!(post.getComments() == null)) {
+            commentCount = post.getComments().size();
+        }
+        else {
+            commentCount = 0;
+        }
+
+        return commentCount;
     }
 
     public long getId() {
@@ -34,30 +106,6 @@ public class PostResponse {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public int getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(int isActive) {
-        this.isActive = isActive;
-    }
-
-    public long getModeratorId() {
-        return moderatorId;
-    }
-
-    public void setModeratorId(long moderatorId) {
-        this.moderatorId = moderatorId;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 
     public long getTimestamp() {

@@ -1,0 +1,16 @@
+insert into tag (name) values('Java');
+insert into tag (name) values('Spring');
+insert into tag (name) values('Hibernate');
+insert into tag (name) values('Hadoop');
+insert into tag (name) values('Spring Boot');
+insert into tags2post (post_id, tag_id) values('1', '2');
+insert into tags2post (post_id, tag_id) values('1', '3');
+insert into tags2post (post_id, tag_id) values('1', '5');
+insert into tags2post (post_id, tag_id) values('2', '1');
+insert into tags2post (post_id, tag_id) values('2', '2');
+insert into tags2post (post_id, tag_id) values('2', '5');
+insert into tags2post (post_id, tag_id) values('2', '3');
+insert into tags2post (post_id, tag_id) values('3', '4');
+insert into tags2post (post_id, tag_id) values('4', '2');
+insert into tags2post (post_id, tag_id) values('4', '1');
+insert into tags2post (post_id, tag_id) values('5', '2');

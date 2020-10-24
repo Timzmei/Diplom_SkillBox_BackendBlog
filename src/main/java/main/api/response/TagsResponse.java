@@ -9,13 +9,17 @@ public class TagsResponse {
 
 
     @JsonProperty("tags")
-    private List<Tag> tags;
+    private List<TagResponse> tags;
 
-    public List<Tag> getTags() {
+//    public TagsResponse() {
+//        this.tags = tags;
+//    }
+
+    public List<TagResponse> getTags() {
         return tags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(List<TagResponse> tags) {
         this.tags = tags;
     }
 }

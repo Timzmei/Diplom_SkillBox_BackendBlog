@@ -27,9 +27,6 @@ public class ApiPostController {
             @RequestParam(required = false, defaultValue = "10") int limit,
             @RequestParam(required = false, defaultValue = "recent") String mode) {
 
-        System.out.println(12);
-
-
         return ResponseEntity.ok(postService.getPosts(offset, limit, mode)); // получаем ответ от сервиса, в который передаем параметры
     }
 }

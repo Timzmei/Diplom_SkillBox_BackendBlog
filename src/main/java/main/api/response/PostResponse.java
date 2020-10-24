@@ -21,7 +21,7 @@ public class PostResponse {
 
     public PostResponse(Post post) {
         this.id = post.getId();
-        this.timestamp = post.getTime().getTime();
+        this.timestamp = post.getTime().getTime() / 1000;
         this.user = new UserPostResponse(post.getUserId());
         this.title = post.getTitle();
         this.announce = post.getText();

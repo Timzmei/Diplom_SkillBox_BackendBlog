@@ -10,26 +10,26 @@ public class TagResponse {
     @JsonProperty("weight")
     private double weight;
 
-    public TagResponse(Tag tag) {
-        this.name = setName(tag);
-        this.weight = setWeight(tag);
+    public TagResponse(String name, double weight) {
+        this.name = name;
+        this.weight = weight;
     }
 
     public String getName() {
         return name;
     }
 
-    public String setName(Tag tag) {
+    public String setName(String name) {
 //        this.name = tag.getName();
-        return tag.getName();
+        return name;
     }
 
     public double getWeight() {
         return weight;
     }
 
-    public double setWeight(Tag tag) {
+    public double setWeight(double i) {
 //        this.weight = 1 / tag.getId();
-        return 1 / tag.getId();
+        return i;
     }
 }

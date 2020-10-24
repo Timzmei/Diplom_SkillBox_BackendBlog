@@ -12,20 +12,14 @@ public class Tags2Post {
     private int id;
 
 
-    @OneToOne(
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST
-    )
-    @JoinColumn(name = "post_id", nullable=false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_id", nullable=false, referencedColumnName = "id")
 //    @Column(name = "post_id")
 //    @NotNull
     private Post post;
 
-    @OneToOne(
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST
-    )
-    @JoinColumn(name = "tag_id", nullable=false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "tag_id", nullable=false, referencedColumnName = "id")
 //    @Column(name = "tag_id")
 //    @NotNull
     private Tag tag;

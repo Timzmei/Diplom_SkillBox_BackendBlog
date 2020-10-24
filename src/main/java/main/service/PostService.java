@@ -40,7 +40,7 @@ public class PostService {
         Pageable pageable;
         pageable = PageRequest.of(offset, limit);
 
-        List<Post> listPost = postRepository.findAllPosts();
+//        List<Post> listPost = postRepository.findAllPosts();
         Page<Post> pageOfTags = postRepository.findAllOrderByTimeDesc(pageable);
 
         if (mode.equals("popular")) {
@@ -57,10 +57,10 @@ public class PostService {
             }
         }
 
-        return createPostsResponse(pageOfTags, listPost);
+        return createPostsResponse(pageOfTags);
     }
 
-    private PostsResponse createPostsResponse(Page<Post> pageOfTags, List<Post> listPost){
+    private PostsResponse createPostsResponse(Page<Post> pageOfTags){
 
         List<PostResponse> postResponseList = new ArrayList<>();
         for (Post p : pageOfTags) {
@@ -68,8 +68,15 @@ public class PostService {
         }
         PostsResponse postsResponse = new PostsResponse();
         postsResponse.setPosts(postResponseList);
-        postsResponse.setCount(listPost.size());
+        postsResponse.setCount(getCountPosts());
 
         return postsResponse;
     }
+
+    public int getCountPosts(){
+        List<Post> listPost = postRepository.findAllPosts();
+
+        return listPost.size();
+    }
+
 }

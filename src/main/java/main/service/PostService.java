@@ -39,8 +39,6 @@ public class PostService {
 
         Pageable pageable;
         pageable = PageRequest.of(offset, limit);
-
-//        List<Post> listPost = postRepository.findAllPosts();
         Page<Post> pageOfTags = postRepository.findAllOrderByTimeDesc(pageable);
 
         if (mode.equals("popular")) {
@@ -57,10 +55,30 @@ public class PostService {
             }
         }
 
-        return createPostsResponse(pageOfTags);
+        return createPostsResponse(pageOfTags, postRepository.findAllPosts().size());
     }
 
-    private PostsResponse createPostsResponse(Page<Post> pageOfTags){
+    public PostsResponse getPostsSearch(int offset, int limit, String query) {
+        Pageable pageable;
+        pageable = PageRequest.of(offset, limit);
+        Page<Post> pageOfTags = postRepository.findAllOrderBySearch(query, pageable);
+
+        return createPostsResponse(pageOfTags, (int)pageOfTags.getTotalElements());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private PostsResponse createPostsResponse(Page<Post> pageOfTags, int size){
 
         List<PostResponse> postResponseList = new ArrayList<>();
         for (Post p : pageOfTags) {
@@ -68,15 +86,15 @@ public class PostService {
         }
         PostsResponse postsResponse = new PostsResponse();
         postsResponse.setPosts(postResponseList);
-        postsResponse.setCount(getCountPosts());
+        postsResponse.setCount(size);
 
         return postsResponse;
     }
 
-    public int getCountPosts(){
-        List<Post> listPost = postRepository.findAllPosts();
-
-        return listPost.size();
-    }
+//    public int getCountPosts(){
+//        List<Post> listPost = postRepository.findAllPosts();
+//
+//        return listPost.size();
+//    }
 
 }

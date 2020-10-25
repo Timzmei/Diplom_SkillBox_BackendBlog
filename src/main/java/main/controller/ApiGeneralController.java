@@ -40,10 +40,14 @@ public class ApiGeneralController {
     @GetMapping("/api/tag")
     private TagsResponse getTags(
             @RequestParam(required = false, defaultValue = "0") String query) {
-//        return ResponseEntity.ok(tagService.getTags(query));
-
-
         return tagService.getTags(query);
+
+    }
+
+    @GetMapping("/api/calendar") //  в процессе
+    private TagsResponse getCalendar(
+            @RequestParam(required = false, defaultValue = "") String year) {
+        return tagService.getTags(year);
 
     }
 

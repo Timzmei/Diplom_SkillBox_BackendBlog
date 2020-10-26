@@ -33,8 +33,6 @@ public class CalendarService {
 
     public CalendarResponse getCalendar(String year) {
 
-//        List<Post> listOnDate = postRepository.findAllPostsOnDate(year);
-
         List<Post> listAllPost = postRepository.findAllPosts();
 
         SimpleDateFormat formatForDate = new SimpleDateFormat("yyyy-MM-dd");

@@ -66,6 +66,14 @@ public class PostService {
         return createPostsResponse(pageOfTags, (int)pageOfTags.getTotalElements());
     }
 
+    public PostsResponse getPostsByDate(int offset, int limit, String date) {
+        Pageable pageable;
+        pageable = PageRequest.of(offset, limit);
+        Page<Post> pageByDate = postRepository.findAllPostsByDate(date, pageable);
+
+        return createPostsResponse(pageByDate, (int)pageByDate.getTotalElements());
+    }
+
 
 
 

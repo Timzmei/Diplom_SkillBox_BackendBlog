@@ -31,9 +31,10 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
     @Query(value = "SELECT p.*, (SELECT sum(value) FROM post_votes c WHERE c.post_id = p.id) as votes FROM post p WHERE p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY votes DESC", nativeQuery = true)
     Page<Post> findAllOrderByVotesDesc(Pageable pageable);
 
-    @Query(value = "SELECT p.* FROM post p WHERE p.text LIKE '%:query%' AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
-    Page<Post> findAllOrderBySearch(@Param("name") String query, Pageable pageable);
+    @Query(value = "SELECT p.* FROM post p WHERE p.text LIKE %:query% AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
+//    @Query(value = "SELECT p.* FROM post p WHERE p.text LIKE '%linux%' AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
+    Page<Post> findAllOrderBySearch(@Param("query") String query, Pageable pageable);
 
-    @Query(value = "SELECT p.* FROM post p WHERE p.time LIKE ':year%' AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time", nativeQuery = true)
-    List<Post> findAllPostsOnDate(@Param("name") String year);
+    @Query(value = "SELECT p.* FROM post p WHERE p.time LIKE :year% AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time", nativeQuery = true)
+    List<Post> findAllPostsOnDate(@Param("year") String year);
 }

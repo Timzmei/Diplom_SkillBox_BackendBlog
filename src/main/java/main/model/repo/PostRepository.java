@@ -32,12 +32,13 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
     Page<Post> findAllOrderByVotesDesc(Pageable pageable);
 
     @Query(value = "SELECT p.* FROM post p WHERE p.text LIKE %:query% AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
-//    @Query(value = "SELECT p.* FROM post p WHERE p.text LIKE '%linux%' AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
     Page<Post> findAllOrderBySearch(@Param("query") String query, Pageable pageable);
 
     @Query(value = "SELECT p.* FROM post p WHERE p.time LIKE :date% AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time", nativeQuery = true)
-//    @Query(value = "SELECT p.* FROM post p WHERE p.time LIKE '2020-09-02%' AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time", nativeQuery = true)
     Page<Post> findAllPostsByDate(@Param("date") String date, Pageable pageable);
+
+    @Query(value = "SELECT p.* FROM post p JOIN tags2post tp ON tp.post_id = p.id JOIN tag t ON t.id = tp.tag_id WHERE t.name = :tag AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time", nativeQuery = true)
+    Page<Post> findAllPostsByTag(@Param("tag") String tag, Pageable pageable);
 
 
 }

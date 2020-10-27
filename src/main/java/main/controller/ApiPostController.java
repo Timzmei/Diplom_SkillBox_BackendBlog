@@ -47,4 +47,13 @@ public class ApiPostController {
 
         return ResponseEntity.ok(postService.getPostsByDate(offset, limit, date));
     }
+
+    @GetMapping("/byTag")
+    public ResponseEntity<PostsResponse> getPostsByTag(
+            @RequestParam(required = false, defaultValue = "0") int offset,
+            @RequestParam(required = false, defaultValue = "10") int limit,
+            @RequestParam(required = false, defaultValue = "") String tag) {
+
+        return ResponseEntity.ok(postService.getPostsByTag(offset, limit, tag));
+    }
 }

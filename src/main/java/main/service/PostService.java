@@ -74,6 +74,13 @@ public class PostService {
         return createPostsResponse(pageByDate, (int)pageByDate.getTotalElements());
     }
 
+    public PostsResponse getPostsByTag(int offset, int limit, String tag) {
+        Pageable pageable;
+        pageable = PageRequest.of(offset, limit);
+        Page<Post> pageByTag = postRepository.findAllPostsByTag(tag, pageable);
+
+        return createPostsResponse(pageByTag, (int)pageByTag.getTotalElements());
+    }
 
 
 

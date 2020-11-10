@@ -41,18 +41,14 @@ public class PostService {
         pageable = PageRequest.of(offset, limit);
         Page<Post> pageOfTags = postRepository.findAllOrderByTimeDesc(pageable);
 
-        if (mode.equals("popular")) {
+        if (mode.equals("recent")) {
+            pageOfTags = postRepository.findAllOrderByTimeDesc(pageable);
+        } else if (mode.equals("popular")) {
             pageOfTags = postRepository.findAllOrderByCommentsDesc(pageable);
-        }
-        else {
-            if (mode.equals("best")) {
-                pageOfTags = postRepository.findAllOrderByVotesDesc(pageable);
-            }
-            else {
-                if (mode.equals("early")) {
-                    pageOfTags = postRepository.findAllOrderByTime(pageable);
-                }
-            }
+        } else if (mode.equals("best")) {
+            pageOfTags = postRepository.findAllOrderByVotesDesc(pageable);
+        } else if (mode.equals("early")) {
+            pageOfTags = postRepository.findAllOrderByTime(pageable);
         }
 
         return createPostsResponse(pageOfTags, postRepository.findAllPosts().size());
@@ -81,16 +77,6 @@ public class PostService {
 
         return createPostsResponse(pageByTag, (int)pageByTag.getTotalElements());
     }
-
-
-
-
-
-
-
-
-
-
 
 
     private PostsResponse createPostsResponse(Page<Post> pageOfTags, int size){

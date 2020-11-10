@@ -1,6 +1,7 @@
 package main.service;
 
 import main.api.response.TagResponse;
+import main.api.response.TagResponseAnswerQuery;
 import main.api.response.TagsResponse;
 import main.model.Tags2Post;
 import main.model.repo.Tag2PostRepository;
@@ -19,17 +20,15 @@ public class TagService {
 
     public TagsResponse getTags(String query) {
 
-        List<Tags2Post> listTags = tag2PostRepository.getRecentTags();
-        double normParam = (double) tag2PostRepository.getRecentTagsOnName(listTags.get(0).getTagId().getName()).size() / listTags.size();
+        List<TagResponseAnswerQuery> listTags = tag2PostRepository.getRecentTags();
+        double normParam = (double) listTags.get(0).getCount()/listTags.size();
 
         List<TagResponse> tagResponseList = new ArrayList<>();
-//        int countPosts = new PostService().getCountPosts();
 
-        for (Tags2Post t: listTags
+        for (TagResponseAnswerQuery t: listTags
              ) {
-            TagResponse tagResponse = new TagResponse(t.getTagId().getName(), (double)(tag2PostRepository.getRecentTagsOnName(t.getTagId().getName()).size()) / listTags.size() / normParam);
-//            tagResponse.setName(t.getId());
-//            tagResponse.setWeight(tag2PostRepository.getRecentTagsOnName(t.getTagId().getName()).size() / listTags.size() / normParam);
+            TagResponse tagResponse = new TagResponse(t.getName(), ((double)t.getCount()/listTags.size() / normParam));
+
             tagResponseList.add(tagResponse);
         }
 

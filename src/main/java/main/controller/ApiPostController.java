@@ -56,4 +56,16 @@ public class ApiPostController {
 
         return ResponseEntity.ok(postService.getPostsByTag(offset, limit, tag));
     }
+
+    @GetMapping("/moderation") // надо сделать
+    public ResponseEntity<PostsResponse> getPostsModeration(
+            @RequestParam(required = false, defaultValue = "0") int offset,
+            @RequestParam(required = false, defaultValue = "10") int limit,
+            @RequestParam(required = false, defaultValue = "") String status) {
+
+        return ResponseEntity.ok(postService.getPostsByTag(offset, limit, status));
+    }
+
+
+
 }

@@ -1,5 +1,7 @@
 package main.model.repo;
 
+import main.api.response.TagResponseAnswerQuery;
+import main.model.Tag;
 import main.model.Tags2Post;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -10,11 +12,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface Tag2PostRepository extends CrudRepository<Tags2Post, Integer> {
+public interface Tag2PostRepository extends CrudRepository<Tag, Integer> {
 
-    @Query(value = "SELECT t.* FROM tags2post t JOIN post p on p.id = t.post_id JOIN tag t2 on t2.id = t.tag_id WHERE t2.name = :name AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW()", nativeQuery = true)
-    List<Tags2Post> getRecentTagsOnName(@Param("name") String name);
+    @Query(nativeQuery = true, value = "SELECT " +
+            "t.name as name, COUNT(t.id) as count" +
+            " FROM tag t JOIN tags2post tp ON tp.tag_id = t.id JOIN post p on p.id = tp.post_id WHERE p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.time < NOW() GROUP BY tp.tag_id ORDER BY count DESC")
+    List<TagResponseAnswerQuery> getRecentTags();
 
-    @Query(value = "SELECT count(t.post_id) as count, t.* FROM tags2post t JOIN tag t2 on t2.id = t.tag_id GROUP BY t.tag_id ORDER BY count DESC", nativeQuery = true)
-    List<Tags2Post> getRecentTags();
+
 }

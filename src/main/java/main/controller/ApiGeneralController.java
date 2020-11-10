@@ -42,7 +42,7 @@ public class ApiGeneralController {
 
     @GetMapping("/api/tag")
     private TagsResponse getTags(
-            @RequestParam(required = false, defaultValue = "0") String query) {
+            @RequestParam(required = false, defaultValue = "") String query) {
         return tagService.getTags(query);
 
     }

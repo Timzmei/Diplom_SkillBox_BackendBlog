@@ -1,14 +1,13 @@
 package main.api.response;
 
 import main.model.Post;
-import org.springframework.stereotype.Component;
 
-import java.beans.Expression;
 import java.util.LinkedList;
 import java.util.List;
 
 
 public class PostResponse {
+    private String text;
     private long id;
     private long timestamp;
     private UserPostResponse user;
@@ -18,6 +17,26 @@ public class PostResponse {
     private long dislikeCount;
     private long commentCount;
     private long viewCount;
+
+    private boolean active;
+    private List<CommentResponse> comments;
+    private List<String> tags;
+
+
+
+
+    public PostResponse(List<CommentResponse> comments, Post post, List<String> tags) {
+        this.id = post.getId();
+        this.timestamp = post.getTime().getTime() / 1000;
+        this.active = setActive(post.getIsActive());
+        this.user = new UserPostResponse(post);
+        this.title = post.getTitle();
+        this.text = post.getText();
+        this.likeCount = getLikeCount(post);
+        this.likeCount = getDislikeCount(post);
+        this.comments = comments;
+        this.tags = tags;
+    }
 
     public PostResponse(Post post) {
         this.id = post.getId();
@@ -32,6 +51,12 @@ public class PostResponse {
         this.viewCount = post.getViewCount();
     }
 
+    public boolean setActive(byte a) {
+        this.active = a == 1;
+
+        return this.active;
+    }
+
     public String getAnnounce() {
         return announce;
     }
@@ -44,8 +69,7 @@ public class PostResponse {
         likeCount = 0;
 
         if(!(post.getLike() == null)) {
-            LinkedList<Byte> like = new LinkedList<>();
-            like.addAll(post.getLike());
+            LinkedList<Byte> like = new LinkedList<>(post.getLike());
             for (Byte l : like
             ) {
                 if (l == 1) {
@@ -67,8 +91,7 @@ public class PostResponse {
 
         if(!(post.getLike() == null)) {
 
-            LinkedList<Byte> like = new LinkedList<>();
-            like.addAll(post.getLike());
+            LinkedList<Byte> like = new LinkedList<>(post.getLike());
             for (Byte l : like
             ) {
                 if (l == 0) {
@@ -138,5 +161,29 @@ public class PostResponse {
 
     public void setViewCount(long viewCount) {
         this.viewCount = viewCount;
+    }
+
+    public List<CommentResponse> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentResponse> comments) {
+        this.comments = comments;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }

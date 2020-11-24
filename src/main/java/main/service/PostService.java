@@ -1,10 +1,14 @@
 package main.service;
 
+import main.api.response.CommentResponse;
 import main.api.response.PostResponse;
 import main.api.response.PostsResponse;
 import main.model.Post;
 import main.model.PostComments;
+import main.model.Tag;
+import main.model.repo.CommentRepository;
 import main.model.repo.PostRepository;
+import main.model.repo.Tag2PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +28,12 @@ public class PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private Tag2PostRepository tag2PostRepository;
 
     public PostsResponse getPosts(int offset, int limit, String mode) {
         // тут пишем уже выбор запроса из репозитория по mode, простые if
@@ -78,6 +88,22 @@ public class PostService {
         return createPostsResponse(pageByTag, (int)pageByTag.getTotalElements());
     }
 
+    public PostResponse getPostById(int id) {
+
+        List<PostComments> commentsList = commentRepository.findComments(id);
+        List<String> tagList = tag2PostRepository.getTagsByPost(id);
+
+        List<CommentResponse> commentResponseList = new ArrayList<>();
+        for (PostComments c : commentsList) {
+            commentResponseList.add(new CommentResponse(c));
+        }
+
+
+
+
+        return new PostResponse(commentResponseList, postRepository.findPostById(id), tagList);
+    }
+
 
     private PostsResponse createPostsResponse(Page<Post> pageOfTags, int size){
 
@@ -91,6 +117,43 @@ public class PostService {
 
         return postsResponse;
     }
+
+    public PostsResponse getPostsModeration(int offset, int limit, String status) {
+        Pageable pageable;
+        pageable = PageRequest.of(offset, limit);
+        Page<Post> pageModerate = postRepository.findPostsModeration(status, pageable);
+
+        return createPostsResponse(pageModerate, (int)pageModerate.getTotalElements());
+    }
+
+    public PostsResponse getPostsMy(int offset, int limit, String status) {
+        Pageable pageable;
+        pageable = PageRequest.of(offset, limit);
+
+        if (status.equals("inactive")){
+            Page<Post> pageMy = postRepository.findPostsMyInactive(pageable);
+            return createPostsResponse(pageMy, (int)pageMy.getTotalElements());
+
+        }
+        else if (status.equals("pending")){
+            Page<Post> pageMy = postRepository.findPostsMyIsactive("NEW", pageable);
+            return createPostsResponse(pageMy, (int)pageMy.getTotalElements());
+
+        }
+        else if (status.equals("declined")){
+            Page<Post> pageMy = postRepository.findPostsMyIsactive("DECLINED", pageable);
+            return createPostsResponse(pageMy, (int)pageMy.getTotalElements());
+
+        }
+        else if (status.equals("published")){
+            Page<Post> pageMy = postRepository.findPostsMyIsactive("ACCEPTED", pageable);
+            return createPostsResponse(pageMy, (int)pageMy.getTotalElements());
+
+        }
+
+        return null;
+    }
+
 
 //    public int getCountPosts(){
 //        List<Post> listPost = postRepository.findAllPosts();

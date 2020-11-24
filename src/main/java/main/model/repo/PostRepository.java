@@ -40,5 +40,15 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
     @Query(value = "SELECT p.* FROM post p JOIN tags2post tp ON tp.post_id = p.id JOIN tag t ON t.id = tp.tag_id WHERE t.name = :tag AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time", nativeQuery = true)
     Page<Post> findAllPostsByTag(@Param("tag") String tag, Pageable pageable);
 
+    @Query(value = "SELECT p.* FROM post p WHERE p.id = :id AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time", nativeQuery = true)
+    Post findPostById(@Param("id") int id);
 
+    @Query(value = "SELECT p.* FROM post p WHERE p.is_active = 1 AND p.moderation_status = :status AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
+    Page<Post> findPostsModeration(@Param("status") String status, Pageable pageable);
+
+    @Query(value = "SELECT p.* FROM post p WHERE p.is_active = 0 AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
+    Page<Post> findPostsMyInactive(Pageable pageable);
+
+    @Query(value = "SELECT p.* FROM post p WHERE p.is_active = 1 AND p.moderation_status = :status AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
+    Page<Post> findPostsMyIsactive(@Param("status") String status, Pageable pageable);
 }

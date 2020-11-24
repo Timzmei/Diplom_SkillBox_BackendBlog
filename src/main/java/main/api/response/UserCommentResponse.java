@@ -1,25 +1,20 @@
 package main.api.response;
 
-import main.model.Post;
 import main.model.User;
-import org.springframework.stereotype.Component;
 
-public class UserPostResponse {
-
+public class UserCommentResponse {
     private int id;
     private String name;
     private String photo;
 
-
-    public UserPostResponse(User user) {
+    public UserCommentResponse(User user) {
         this.id = user.getId();
         this.name = user.getName();
+        this.photo = user.getPhoto();
     }
 
-    public UserPostResponse(Post post) {
-        this.id = post.getUserId().getId();
-        this.name = post.getUserId().getName();
-        this.photo = post.getUserId().getPhoto();
+    public String getPhoto() {
+        return photo;
     }
 
     public int getId() {

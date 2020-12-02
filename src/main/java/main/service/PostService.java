@@ -1,26 +1,23 @@
 package main.service;
 
-import main.api.response.CommentResponse;
-import main.api.response.PostResponse;
-import main.api.response.PostsResponse;
+import main.api.request.PostRequest;
+import main.api.response.*;
 import main.model.Post;
 import main.model.PostComments;
 import main.model.Tag;
-import main.model.repo.CommentRepository;
-import main.model.repo.PostRepository;
-import main.model.repo.Tag2PostRepository;
+import main.model.User;
+import main.model.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.security.Principal;
+import java.util.*;
 
 
 @Service
@@ -31,6 +28,12 @@ public class PostService {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private TagRepository tagRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private Tag2PostRepository tag2PostRepository;
@@ -88,10 +91,10 @@ public class PostService {
         return createPostsResponse(pageByTag, (int)pageByTag.getTotalElements());
     }
 
-    public PostResponse getPostById(int id) {
+    public PostResponse getPostById(int id, Principal principal) {
 
         List<PostComments> commentsList = commentRepository.findComments(id);
-        List<String> tagList = tag2PostRepository.getTagsByPost(id);
+        List<String> tagList = tagRepository.getTagsByPost(id);
 
         List<CommentResponse> commentResponseList = new ArrayList<>();
         for (PostComments c : commentsList) {
@@ -100,8 +103,28 @@ public class PostService {
 
 
 
+        Post post = postRepository.findPostById(id);
 
-        return new PostResponse(commentResponseList, postRepository.findPostById(id), tagList);
+        if (post == null){
+            return null;
+        }
+
+
+
+        if (!(principal == null)) {
+            User user = userRepository.findByEmail(principal.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+
+            if (!(post.getUserId().getId() == user.getId()) || user.getIsModerator() == 0) {
+                postRepository.updateViewPost(post.getId(), post.getViewCount() + 1);
+            }
+        }
+        else {
+            postRepository.updateViewPost(post.getId(), post.getViewCount() + 1);
+        }
+//        post = postRepository.findPostById(id);
+
+        return new PostResponse(commentResponseList, post, tagList);
     }
 
 
@@ -118,40 +141,86 @@ public class PostService {
         return postsResponse;
     }
 
-    public PostsResponse getPostsModeration(int offset, int limit, String status) {
+    public PostsResponse getPostsModeration(int offset, int limit, String status, Principal principal) {
         Pageable pageable;
         pageable = PageRequest.of(offset, limit);
-        Page<Post> pageModerate = postRepository.findPostsModeration(status, pageable);
+        Page<Post> pageModerate = postRepository.findPostsModeration(status, principal.getName(), pageable);
 
         return createPostsResponse(pageModerate, (int)pageModerate.getTotalElements());
     }
 
-    public PostsResponse getPostsMy(int offset, int limit, String status) {
+    public PostsResponse getPostsMy(int offset, int limit, String status, Principal principal) {
         Pageable pageable;
         pageable = PageRequest.of(offset, limit);
 
+        String email = "\'" + principal.getName() + "\'";
+
         if (status.equals("inactive")){
-            Page<Post> pageMy = postRepository.findPostsMyInactive(pageable);
+
+            System.out.println("email - " + email);
+
+            Page<Post> pageMy = postRepository.findPostsMyInactive(pageable, principal.getName());
             return createPostsResponse(pageMy, (int)pageMy.getTotalElements());
 
         }
         else if (status.equals("pending")){
-            Page<Post> pageMy = postRepository.findPostsMyIsactive("NEW", pageable);
+            Page<Post> pageMy = postRepository.findPostsMyIsactive("NEW", principal.getName(), pageable);
             return createPostsResponse(pageMy, (int)pageMy.getTotalElements());
 
         }
         else if (status.equals("declined")){
-            Page<Post> pageMy = postRepository.findPostsMyIsactive("DECLINED", pageable);
+            Page<Post> pageMy = postRepository.findPostsMyIsactive("DECLINED", principal.getName(), pageable);
             return createPostsResponse(pageMy, (int)pageMy.getTotalElements());
 
         }
         else if (status.equals("published")){
-            Page<Post> pageMy = postRepository.findPostsMyIsactive("ACCEPTED", pageable);
+            Page<Post> pageMy = postRepository.findPostsMyIsactive("ACCEPTED", principal.getName(), pageable);
             return createPostsResponse(pageMy, (int)pageMy.getTotalElements());
 
         }
 
         return null;
+    }
+
+    public PostApiPostResponse postPosts(long timestamp, byte active, String title, String text, List<String> tags, Principal principal) {
+
+        System.out.println(timestamp);
+
+        Date dateNow = new Date();
+        Date datePost = new Date(timestamp);
+
+        if (datePost.before(dateNow)){
+            datePost = dateNow;
+        }
+
+
+        PostApiPostResponse postApiPostResponse;
+        PostApiPostErrors postApiPostErrors = new PostApiPostErrors();
+
+        if (title.length() < 3 || text.length() < 50){
+            postApiPostErrors.setTitle("Заголовок не установлен");
+            postApiPostErrors.setText("Текст публикации слишком короткий");
+
+            postApiPostResponse = new PostApiPostResponse(false, postApiPostErrors);
+        }
+
+        else {
+            User user = userRepository.findByEmail(principal.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+            postRepository.insertPost(datePost, active, title, text, user.getId());
+            int id = postRepository.getLastId();
+
+            for (String t: tags
+            ) {
+                tagRepository.insertTag(t);
+                tag2PostRepository.insertTag2Post(id, tagRepository.getByName(t));
+            }
+
+            postApiPostResponse = new PostApiPostResponse(true);
+
+        }
+
+        return postApiPostResponse;
     }
 
 

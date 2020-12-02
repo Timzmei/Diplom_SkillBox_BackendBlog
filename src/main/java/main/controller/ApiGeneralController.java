@@ -1,15 +1,17 @@
 package main.controller;
 
-import main.api.response.CalendarResponse;
-import main.api.response.InitResponse;
-import main.api.response.SettingsResponse;
-import main.api.response.TagsResponse;
+import main.api.response.*;
 import main.service.CalendarService;
 import main.service.SettingsService;
+import main.service.StorageService;
 import main.service.TagService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
 public class ApiGeneralController {
@@ -18,15 +20,15 @@ public class ApiGeneralController {
     private final InitResponse initResponse;
     private final TagService tagService;
     private final CalendarService calendarService;
+    private final StorageService storageService;
 
 
-
-
-    public ApiGeneralController(SettingsService settingsService, InitResponse initResponse, TagService tagService, CalendarService calendarService) {
+    public ApiGeneralController(SettingsService settingsService, InitResponse initResponse, TagService tagService, CalendarService calendarService, StorageService storageService) {
         this.settingsService = settingsService;
         this.initResponse = initResponse;
         this.tagService = tagService;
         this.calendarService = calendarService;
+        this.storageService = storageService;
     }
 
     @GetMapping("/api/settings")
@@ -47,11 +49,22 @@ public class ApiGeneralController {
 
     }
 
-    @GetMapping("/api/calendar") //  в процессе
+    @GetMapping("/api/calendar")
     private CalendarResponse getCalendar(
             @RequestParam(required = false, defaultValue = "none") String year) {
         return calendarService.getCalendar(year);
 
+    }
+
+    @PostMapping("/api/image") // необходимо дописать ответ в случае ошибки
+    private ResponseEntity<Object> fileUpload(@RequestParam("image") MultipartFile file) throws Exception {
+
+//        storageService.store(file);
+//        redirectAttributes.addFlashAttribute("message",
+//                "You successfully uploaded " + file.getOriginalFilename() + "!");
+
+
+        return storageService.store(file);
     }
 
 }

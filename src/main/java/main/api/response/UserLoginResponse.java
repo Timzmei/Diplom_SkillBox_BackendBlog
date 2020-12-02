@@ -1,6 +1,9 @@
 package main.api.response;
 
 import lombok.Data;
+import main.model.repo.PostRepository;
+
+import java.security.Principal;
 
 @Data
 public class UserLoginResponse {
@@ -13,4 +16,10 @@ public class UserLoginResponse {
     private int moderationCount;
     private boolean settings;
 
+
+    public void setModerationCount(String email, PostRepository postRepository) {
+        this.moderationCount = postRepository.findAllPostsIsModerate(email);
+    }
 }
+
+

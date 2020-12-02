@@ -12,6 +12,7 @@ spring:
 #spring.http.encoding.enabled=true
 
 
+
 blog:
   title: DevPub
   subtitle: Рассказы разработчиков

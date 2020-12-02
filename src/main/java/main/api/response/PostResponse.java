@@ -33,7 +33,8 @@ public class PostResponse {
         this.title = post.getTitle();
         this.text = post.getText();
         this.likeCount = getLikeCount(post);
-        this.likeCount = getDislikeCount(post);
+        this.dislikeCount = getDislikeCount(post);
+        this.viewCount = post.getViewCount();
         this.comments = comments;
         this.tags = tags;
     }
@@ -45,7 +46,7 @@ public class PostResponse {
         this.title = post.getTitle();
         this.announce = post.getText();
         this.likeCount = getLikeCount(post);
-        this.likeCount = getDislikeCount(post);
+        this.dislikeCount = getDislikeCount(post);
 
         this.commentCount = setCommentCount(post);
         this.viewCount = post.getViewCount();

@@ -3,6 +3,7 @@ package main.controller;
 import main.api.request.LoginRequest;
 import main.api.request.RegisterRequest;
 import main.api.response.*;
+import main.model.repo.PostRepository;
 import main.model.repo.UserRepository;
 import main.service.CaptchaService;
 import main.service.RegisterService;
@@ -28,14 +29,16 @@ public class ApiAuthController {
     private final RegisterService registerService;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     @Autowired
-    public ApiAuthController(AuthChekResponse authChekResponse, CaptchaService captchaService, RegisterService registerService, AuthenticationManager authenticationManager, UserRepository userRepository) {
+    public ApiAuthController(AuthChekResponse authChekResponse, CaptchaService captchaService, RegisterService registerService, AuthenticationManager authenticationManager, UserRepository userRepository, PostRepository postRepository) {
         this.authChekResponse = authChekResponse;
         this.captchaService = captchaService;
         this.registerService = registerService;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
+        this.postRepository = postRepository;
     }
 
 
@@ -83,8 +86,11 @@ public class ApiAuthController {
         UserLoginResponse userResponse = new UserLoginResponse();
         userResponse.setEmail(currentUser.getEmail());
         userResponse.setName(currentUser.getName());
+        userResponse.setPhoto(currentUser.getPhoto());
         userResponse.setModeration(currentUser.getIsModerator() == 1);
         userResponse.setId(currentUser.getId());
+        userResponse.setSettings(currentUser.getIsModerator() == 1);
+        userResponse.setModerationCount(email, postRepository);
 
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setResult(true);

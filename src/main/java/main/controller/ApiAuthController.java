@@ -2,16 +2,19 @@ package main.controller;
 
 import main.api.request.LoginRequest;
 import main.api.request.RegisterRequest;
+import main.api.request.RestoreRequest;
 import main.api.response.*;
 import main.model.repo.PostRepository;
 import main.model.repo.UserRepository;
 import main.service.CaptchaService;
 import main.service.RegisterService;
+import main.service.RestoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,15 +33,17 @@ public class ApiAuthController {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final RestoreService restoreService;
 
     @Autowired
-    public ApiAuthController(AuthChekResponse authChekResponse, CaptchaService captchaService, RegisterService registerService, AuthenticationManager authenticationManager, UserRepository userRepository, PostRepository postRepository) {
+    public ApiAuthController(AuthChekResponse authChekResponse, CaptchaService captchaService, RegisterService registerService, AuthenticationManager authenticationManager, UserRepository userRepository, PostRepository postRepository, RestoreService restoreService) {
         this.authChekResponse = authChekResponse;
         this.captchaService = captchaService;
         this.registerService = registerService;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.restoreService = restoreService;
     }
 
 
@@ -59,7 +64,7 @@ public class ApiAuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) throws AuthenticationException {
         Authentication auth = authenticationManager
                 .authenticate(
                         new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -77,6 +82,13 @@ public class ApiAuthController {
         }
 
         return ResponseEntity.ok(getLoginResponse(principal.getName()));
+    }
+
+    @PostMapping("/restore")
+    public ResponseEntity<RestoreResponse> postRestore(
+            @RequestBody RestoreRequest restoreRequest) {
+
+        return ResponseEntity.ok(restoreService.checkEmail(restoreRequest.getEmail()));
     }
 
     private LoginResponse getLoginResponse(String email){

@@ -5,6 +5,7 @@ import main.service.CalendarService;
 import main.service.SettingsService;
 import main.service.StorageService;
 import main.service.TagService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.naming.SizeLimitExceededException;
+import java.io.IOException;
 
 @RestController
 public class ApiGeneralController {
@@ -57,14 +61,15 @@ public class ApiGeneralController {
     }
 
     @PostMapping("/api/image") // необходимо дописать ответ в случае ошибки
-    private ResponseEntity<Object> fileUpload(@RequestParam("image") MultipartFile file) throws Exception {
-
-//        storageService.store(file);
-//        redirectAttributes.addFlashAttribute("message",
-//                "You successfully uploaded " + file.getOriginalFilename() + "!");
+    private ResponseEntity<Object> fileUpload(@RequestParam("image") MultipartFile file) throws IOException {
 
 
         return storageService.store(file);
+
+
+
+
+
     }
 
 }

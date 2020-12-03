@@ -1,17 +1,15 @@
 package main.api.response;
 
-import lombok.Data;
-
 public class PostApiPostResponse {
 
     private boolean result;
-    private PostApiPostErrors errors;
+    private ErrorsResponse errors;
 
     public PostApiPostResponse(boolean result) {
         this.result = result;
     }
 
-    public PostApiPostResponse(boolean result, PostApiPostErrors errors) {
+    public PostApiPostResponse(boolean result, ErrorsResponse errors) {
         this.result = result;
         this.errors = errors;
     }
@@ -24,11 +22,11 @@ public class PostApiPostResponse {
         this.result = result;
     }
 
-    public PostApiPostErrors getErrors() {
+    public ErrorsResponse getErrors() {
         return errors;
     }
 
-    public void setErrors(PostApiPostErrors errors) {
+    public void setErrors(ErrorsResponse errors) {
         this.errors = errors;
     }
 }

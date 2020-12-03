@@ -1,18 +1,14 @@
 package main.service;
 
-import main.api.request.PostRequest;
 import main.api.response.*;
 import main.model.Post;
 import main.model.PostComments;
-import main.model.Tag;
 import main.model.User;
 import main.model.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -195,13 +191,11 @@ public class PostService {
 
 
         PostApiPostResponse postApiPostResponse;
-        PostApiPostErrors postApiPostErrors = new PostApiPostErrors();
 
         if (title.length() < 3 || text.length() < 50){
-            postApiPostErrors.setTitle("Заголовок не установлен");
-            postApiPostErrors.setText("Текст публикации слишком короткий");
+            ErrorsResponse errorsResponse = new ErrorsResponse("Заголовок не установлен", "Текст публикации слишком короткий");
 
-            postApiPostResponse = new PostApiPostResponse(false, postApiPostErrors);
+            postApiPostResponse = new PostApiPostResponse(false, errorsResponse);
         }
 
         else {

@@ -25,4 +25,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void insertUser(@Param("email") String email, @Param("name") String name, @Param("time") Date time);
 
     Optional<User> findByEmail(String email);
+
+
+    @Modifying
+    @Query(
+            value = "UPDATE user SET code = :code WHERE email = :email",
+            nativeQuery = true)
+    void saveCode(@Param("email") String email, @Param("code") String code);
 }

@@ -97,17 +97,16 @@ public class PostService {
             commentResponseList.add(new CommentResponse(c));
         }
 
-
-
-        Post post = postRepository.findPostById(id);
-
-        if (post == null){
-            return null;
-        }
-
-
+        Post post;
 
         if (!(principal == null)) {
+
+            post = postRepository.findPostById(id);
+
+            if (post == null){
+                return null;
+            }
+
             User user = userRepository.findByEmail(principal.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
@@ -116,11 +115,18 @@ public class PostService {
             }
         }
         else {
+            post = postRepository.findPostAcceptedById(id);
+
+            if (post == null){
+                return null;
+            }
+
             postRepository.updateViewPost(post.getId(), post.getViewCount() + 1);
         }
 //        post = postRepository.findPostById(id);
 
-        return new PostResponse(commentResponseList, post, tagList);
+        PostResponse postResponse = new PostResponse(commentResponseList, post, tagList);
+        return postResponse;
     }
 
 
@@ -153,7 +159,7 @@ public class PostService {
 
         if (status.equals("inactive")){
 
-            System.out.println("email - " + email);
+//            System.out.println("email - " + email);
 
             Page<Post> pageMy = postRepository.findPostsMyInactive(pageable, principal.getName());
             return createPostsResponse(pageMy, (int)pageMy.getTotalElements());
@@ -180,15 +186,7 @@ public class PostService {
 
     public PostApiPostResponse postPosts(long timestamp, byte active, String title, String text, List<String> tags, Principal principal) {
 
-        System.out.println(timestamp);
-
-        Date dateNow = new Date();
-        Date datePost = new Date(timestamp);
-
-        if (datePost.before(dateNow)){
-            datePost = dateNow;
-        }
-
+        Date datePost = setDatePost(timestamp);
 
         PostApiPostResponse postApiPostResponse;
 
@@ -215,6 +213,43 @@ public class PostService {
         }
 
         return postApiPostResponse;
+    }
+
+    public PostApiPostResponse putPosts(long timestamp, byte active, String title, String text, List<String> tags, int id, Principal principal) {
+
+        Date datePost = setDatePost(timestamp);
+
+        PostApiPostResponse postApiPostResponse;
+
+        if (title.length() < 3 || text.length() < 50){
+            ErrorsResponse errorsResponse = new ErrorsResponse("Заголовок не установлен", "Текст публикации слишком короткий");
+            postApiPostResponse = new PostApiPostResponse(false, errorsResponse);
+        }
+
+        else {
+            postRepository.updatePost(datePost, active, title, text, id);
+            for (String t: tags
+            ) {
+                tagRepository.insertTag(t);
+                tag2PostRepository.insertTag2Post(id, tagRepository.getByName(t));
+            }
+            postApiPostResponse = new PostApiPostResponse(true);
+
+        }
+
+        return postApiPostResponse;
+    }
+
+
+    private Date setDatePost(long timestamp){
+
+        Date dateNow = new Date();
+        Date datePost = new Date(timestamp);
+
+        if (datePost.before(dateNow)){
+            datePost = dateNow;
+        }
+        return datePost;
     }
 
 

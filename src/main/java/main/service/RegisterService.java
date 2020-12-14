@@ -6,7 +6,11 @@ import main.api.response.RegisterResponse;
 import main.model.repo.CaptchaRepository;
 import main.model.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 public class RegisterService {
@@ -49,8 +53,7 @@ public class RegisterService {
             return new RegisterResponse(result, registerErrorResponse);
         }
         else {
-
-
+            userRepository.insertUser(registerRequest.getE_mail(), registerRequest.getName(), new Date(), BCrypt.hashpw(registerRequest.getPassword(), BCrypt.gensalt(12)));
             return new RegisterResponse(result);
         }
 

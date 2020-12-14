@@ -8,10 +8,11 @@ spring:
 
     show-sql: false
 
-spring.mail.host: smtp.mailtrap.io
-spring.mail.username: 7deeb8027c6148
-spring.mail.password: 4f4a0cf4d2e697
-spring.mail.port: 2525
+spring.mail:
+  host: smtp.mailtrap.io
+  username: 7deeb8027c6148
+  password: 4f4a0cf4d2e697
+  port: 2525
 mail.debug: true
 
 #  servlet:

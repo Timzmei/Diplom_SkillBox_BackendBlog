@@ -58,6 +58,18 @@ public class PostResponse {
         return this.active;
     }
 
+    public long getLikeCount() {
+        return likeCount;
+    }
+
+    public long getDislikeCount() {
+        return dislikeCount;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
     public String getAnnounce() {
         return announce;
     }

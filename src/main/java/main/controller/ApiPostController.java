@@ -12,7 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/post") // все запросы этого контроллера будут начинаться с этого префикс
@@ -36,7 +35,7 @@ public class ApiPostController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasAuthority('user:moderate')")
+    @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<PostApiPostResponse> postPost(
             @RequestBody PostRequest postRequest,
             Principal principal) {
@@ -95,7 +94,7 @@ public class ApiPostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> getPostsById(
+    public Object getPostsById(
             @PathVariable int id,
             Principal principal) {
         PostResponse postResponse = postService.getPostById(id, principal);
@@ -104,8 +103,25 @@ public class ApiPostController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
+        return postResponse;
+    }
 
-        return ResponseEntity.ok(postService.getPostById(id, principal));
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('user:moderate')")
+    public ResponseEntity<PostApiPostResponse> putPost(
+            @PathVariable int id,
+            @RequestBody PostRequest postRequest,
+            Principal principal) {
+
+
+        return ResponseEntity.ok(postService.putPosts(
+                postRequest.getTimestamp(),
+                postRequest.getActive(),
+                postRequest.getTitle(),
+                postRequest.getText(),
+                postRequest.getTags(),
+                id,
+                principal));
     }
 
 

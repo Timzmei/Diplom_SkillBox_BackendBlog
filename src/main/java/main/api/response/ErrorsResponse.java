@@ -14,6 +14,7 @@ public class ErrorsResponse {
     @JsonProperty("image")
     private String image;
 
+
     public ErrorsResponse(String title, String text) {
         this.title = setTitle(title);
         this.text = setText(text);
@@ -23,9 +24,13 @@ public class ErrorsResponse {
         this.image = setImage(image);
     }
 
+
+
     public String setTitle(String title) {
         return title;
     }
+
+
 
     public String setText(String text) {
         return text;

@@ -1,21 +1,15 @@
 package main.controller;
 
+import main.api.request.CommentRequest;
 import main.api.response.*;
-import main.service.CalendarService;
-import main.service.SettingsService;
-import main.service.StorageService;
-import main.service.TagService;
-import org.springframework.http.HttpStatus;
+import main.service.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.naming.SizeLimitExceededException;
 import java.io.IOException;
+import java.security.Principal;
 
 @RestController
 public class ApiGeneralController {
@@ -25,14 +19,16 @@ public class ApiGeneralController {
     private final TagService tagService;
     private final CalendarService calendarService;
     private final StorageService storageService;
+    private final CommentService commentService;
 
 
-    public ApiGeneralController(SettingsService settingsService, InitResponse initResponse, TagService tagService, CalendarService calendarService, StorageService storageService) {
+    public ApiGeneralController(SettingsService settingsService, InitResponse initResponse, TagService tagService, CalendarService calendarService, StorageService storageService, CommentService commentService) {
         this.settingsService = settingsService;
         this.initResponse = initResponse;
         this.tagService = tagService;
         this.calendarService = calendarService;
         this.storageService = storageService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/api/settings")
@@ -60,16 +56,20 @@ public class ApiGeneralController {
 
     }
 
-    @PostMapping("/api/image") // необходимо дописать ответ в случае ошибки
+    @PostMapping("/api/image")
+    @PreAuthorize("hasAuthority('user:write')")
     private ResponseEntity<Object> fileUpload(@RequestParam("image") MultipartFile file) throws IOException {
-
 
         return storageService.store(file);
 
+    }
 
-
-
-
+    @PostMapping("/api/comment")
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<ApiCommentResponse> postComment(
+            @RequestBody CommentRequest commentRequest,
+            Principal principal) {
+        return commentService.postComment(commentRequest, principal);
     }
 
 }

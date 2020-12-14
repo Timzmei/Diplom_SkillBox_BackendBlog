@@ -14,7 +14,6 @@ import java.util.List;
 public class TagService {
 
     @Autowired
-//    private TagRepository tagRepository;
     private TagRepository tagRepository;
 
     public TagsResponse getTags(String query) {

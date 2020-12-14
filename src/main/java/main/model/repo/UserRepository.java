@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -19,15 +20,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
     String findUserByEmail(@Param("email") String email);
 
     @Modifying
+    @Transactional
     @Query(
-            value = "INSERT INTO user (email, name, reg_time) VALUES (:email, :name, :time)",
+            value = "INSERT INTO user (email, name, reg_time, password, is_moderator) VALUES (:email, :name, :time, :password, 0)",
             nativeQuery = true)
-    void insertUser(@Param("email") String email, @Param("name") String name, @Param("time") Date time);
+    void insertUser(@Param("email") String email, @Param("name") String name, @Param("time") Date time, @Param("password") String password);
 
     Optional<User> findByEmail(String email);
 
 
     @Modifying
+    @Transactional
     @Query(
             value = "UPDATE user SET code = :code WHERE email = :email",
             nativeQuery = true)

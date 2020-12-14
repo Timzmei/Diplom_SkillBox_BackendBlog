@@ -30,7 +30,7 @@ public class RestoreService {
                 "Hello, %s! \n" +
                         "Reset your password. Please, visit next link: http://localhost:8080/login/change-password/%s",
                 user.getName(),
-                user.getCode()
+                codeHash
         );
 
 

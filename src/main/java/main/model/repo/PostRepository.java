@@ -44,6 +44,9 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
     Page<Post> findAllPostsByTag(@Param("tag") String tag, Pageable pageable);
 
     @Query(value = "SELECT p.* FROM post p WHERE p.id = :id AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time", nativeQuery = true)
+    Post findPostAcceptedById(@Param("id") int id);
+
+    @Query(value = "SELECT p.* FROM post p WHERE p.id = :id", nativeQuery = true)
     Post findPostById(@Param("id") int id);
 
     @Query(value = "SELECT p.* FROM post p JOIN user u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 1 AND p.moderation_status = :status AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
@@ -64,6 +67,15 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
                     " VALUES (:active, 'NEW', :text, :title, :date, :user_id, :user_id, 0)",
             nativeQuery = true)
     void insertPost(@Param("date") Date date, @Param("active") byte active, @Param("title") String title, @Param("text") String text, @Param("user_id") int user_id);
+
+    @Modifying
+    @Transactional
+    @Query(
+            value = "UPDATE post p SET p.is_active = :active, p.moderation_status = 'NEW', p.text = :text, p.title = :title, p.time = :date" +
+                    " WHERE p.id = :id",
+            nativeQuery = true)
+    void updatePost(@Param("date") Date date, @Param("active") byte active, @Param("title") String title, @Param("text") String text, @Param("id") int id);
+
 
     @Modifying
     @Transactional

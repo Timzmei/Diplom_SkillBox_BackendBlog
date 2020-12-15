@@ -1,29 +1,22 @@
 package main.api.response;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import org.springframework.stereotype.Component;
+
+@Data
 public class ApiCommentResponse {
 
-
-    private boolean result;
-    private ErrorsResponse errors;
-    private String text;
+    @JsonProperty("id")
     private int id;
 
     public ApiCommentResponse(int id) {
         this.id = id;
     }
 
-    public ApiCommentResponse() {
-        this.result = setResult();
-        this.errors = errors;
+    public void setId(int id) {
+        this.id = id;
     }
-
-    public boolean setResult() {
-        return false;
-    }
-
-    public ErrorsResponse setErrors() {
-        return new ErrorsResponse("", "Текст комментария не задан или слишком короткий");
-    }
-
 }
+

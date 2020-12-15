@@ -76,6 +76,13 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
             nativeQuery = true)
     void updatePost(@Param("date") Date date, @Param("active") byte active, @Param("title") String title, @Param("text") String text, @Param("id") int id);
 
+    @Modifying
+    @Transactional
+    @Query(
+            value = "UPDATE post p SET  p.moderation_status = :moderation_status, p.moderator_id = :moderator_id WHERE p.id = :id",
+            nativeQuery = true)
+    void updateModeratePost(@Param("moderation_status") String moderation_status, @Param("id") int id, @Param("moderator_id") int moderator_id);
+
 
     @Modifying
     @Transactional

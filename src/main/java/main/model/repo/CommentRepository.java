@@ -20,8 +20,8 @@ public interface CommentRepository extends PagingAndSortingRepository<PostCommen
     @Query(value = "SELECT p.* FROM post_comments p WHERE p.post_id = :id", nativeQuery = true)
     List<PostComments> findComments(@Param("id") int id);
 
-    @Query(value = "SELECT p.id FROM post_comments p WHERE id = :id", nativeQuery = true)
-    Integer findCommentsById(@Param("id") int id);
+    @Query(value = "SELECT p.* FROM post_comments p WHERE id = :id", nativeQuery = true)
+    PostComments findCommentsById(@Param("id") int id);
 
     @Modifying
     @Transactional

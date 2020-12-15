@@ -19,6 +19,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT u.email FROM user u WHERE u.email = :email", nativeQuery = true)
     String findUserByEmail(@Param("email") String email);
 
+    @Query(value = "SELECT u.* FROM user u WHERE u.code = :code", nativeQuery = true)
+    User findUserByCode(@Param("code") String code);
+
     @Modifying
     @Transactional
     @Query(
@@ -35,4 +38,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
             value = "UPDATE user SET code = :code WHERE email = :email",
             nativeQuery = true)
     void saveCode(@Param("email") String email, @Param("code") String code);
+
+
+    @Modifying
+    @Transactional
+    @Query(
+            value = "UPDATE user SET password = :password WHERE code = :code",
+            nativeQuery = true)
+    void changePassword(@Param("password") String password, @Param("code") String code);
 }

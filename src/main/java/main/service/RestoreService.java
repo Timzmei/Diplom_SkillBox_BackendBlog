@@ -1,6 +1,6 @@
 package main.service;
 
-import main.api.response.RestoreResponse;
+import main.api.response.ResultResponse;
 import main.model.User;
 import main.model.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class RestoreService {
     @Autowired
     private MailSender mailSender;
 
-    public RestoreResponse checkEmail(String email) {
+    public ResultResponse checkEmail(String email) {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
@@ -36,10 +36,8 @@ public class RestoreService {
 
         mailSender.mailSender(email, "ActivationCode", message);
 
-        RestoreResponse restoreResponse = new RestoreResponse();
-        restoreResponse.setResult(true);
+        ResultResponse resultResponse = new ResultResponse(true);
 
-
-        return restoreResponse;
+        return resultResponse;
     }
 }

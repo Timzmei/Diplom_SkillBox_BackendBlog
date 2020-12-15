@@ -1,12 +1,14 @@
 package main.controller;
 
 import main.api.request.LoginRequest;
+import main.api.request.PasswordRequest;
 import main.api.request.RegisterRequest;
 import main.api.request.RestoreRequest;
 import main.api.response.*;
 import main.model.repo.PostRepository;
 import main.model.repo.UserRepository;
 import main.service.CaptchaService;
+import main.service.PasswordService;
 import main.service.RegisterService;
 import main.service.RestoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +36,10 @@ public class ApiAuthController {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final RestoreService restoreService;
+    private final PasswordService passwordService;
 
     @Autowired
-    public ApiAuthController(AuthChekResponse authChekResponse, CaptchaService captchaService, RegisterService registerService, AuthenticationManager authenticationManager, UserRepository userRepository, PostRepository postRepository, RestoreService restoreService) {
+    public ApiAuthController(AuthChekResponse authChekResponse, CaptchaService captchaService, RegisterService registerService, AuthenticationManager authenticationManager, UserRepository userRepository, PostRepository postRepository, RestoreService restoreService, PasswordService passwordService) {
         this.authChekResponse = authChekResponse;
         this.captchaService = captchaService;
         this.registerService = registerService;
@@ -44,6 +47,7 @@ public class ApiAuthController {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.restoreService = restoreService;
+        this.passwordService = passwordService;
     }
 
 
@@ -85,11 +89,19 @@ public class ApiAuthController {
     }
 
     @PostMapping("/restore")
-    public ResponseEntity<RestoreResponse> postRestore(
+    public ResponseEntity<ResultResponse> postRestore(
             @RequestBody RestoreRequest restoreRequest) {
 
         return ResponseEntity.ok(restoreService.checkEmail(restoreRequest.getEmail()));
     }
+
+    @PostMapping("/password")
+    public ResponseEntity postPassword(
+            @RequestBody PasswordRequest passwordRequest) {
+
+        return passwordService.checkCode(passwordRequest);
+    }
+
 
     private LoginResponse getLoginResponse(String email){
         main.model.User currentUser =
@@ -109,6 +121,9 @@ public class ApiAuthController {
         loginResponse.setUserLoginResponse(userResponse);
         return loginResponse;
     }
+
+
+
 
 
 }

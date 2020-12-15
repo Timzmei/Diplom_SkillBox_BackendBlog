@@ -2,6 +2,7 @@ package main.service;
 
 import main.api.request.CommentRequest;
 import main.api.response.ApiCommentResponse;
+import main.api.response.ApiCommentResponseError;
 import main.model.Post;
 import main.model.PostComments;
 import main.model.User;
@@ -11,6 +12,7 @@ import main.model.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -29,25 +31,16 @@ public class CommentService {
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<ApiCommentResponse> postComment(CommentRequest commentRequest, Principal principal) {
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity postComment(CommentRequest commentRequest, Principal principal) {
 
-        Integer parentCommentId;
-
-        if (commentRequest.getParent_id() == null){
-            parentCommentId = null;
-        }
-        else{
-            parentCommentId = commentRepository.findCommentsById(commentRequest.getParent_id());
-        }
-        Integer postId = postRepository.findPostById(commentRequest.getPost_id()).getId();
-
-        if (parentCommentId == null || postId == null){
+        if ((!(commentRequest.getParent_id() == null) && commentRepository.findCommentsById(commentRequest.getParent_id()) == null) || postRepository.findPostById(commentRequest.getPost_id()) == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        if(commentRequest.getText().length() < 2) {
-            ApiCommentResponse apiCommentResponse = new ApiCommentResponse();
-            return new ResponseEntity<>(apiCommentResponse, HttpStatus.OK);
+        if(commentRequest.getText().length() < 8) {
+            ApiCommentResponseError apiCommentResponseError = new ApiCommentResponseError(false);
+            return new ResponseEntity<>(apiCommentResponseError, HttpStatus.OK);
         }
 
         User user = userRepository.findByEmail(principal.getName())

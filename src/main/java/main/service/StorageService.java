@@ -20,7 +20,6 @@ public class StorageService {
     public ResponseEntity<Object> store(MultipartFile file) throws IOException {
         String folder = "upload";
 
-//        String uuidFile = UUID.randomUUID().toString().replace("-", "");
         String[] uuidPath = UUID.randomUUID().toString().split("\\-", 3);
 
 
@@ -34,25 +33,10 @@ public class StorageService {
             Files.createDirectories(uploadDir);
         }
 
-//        String uuidFile = UUID.randomUUID().toString();
-//        String resultFilename = uuidFile + "." + file.getOriginalFilename();
 
         Path filePath = uploadDir.resolve(file.getOriginalFilename());
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-
-
-
-//        File uploadDir = new File(folder);
-//
-//        if (!uploadDir.exists()){
-//            uploadDir.mkdir();
-//        }
-//
-//        String uuidFile = UUID.randomUUID().toString();
-//        String resultFilename = uuidFile + "." + file.getOriginalFilename();
-//
-//        file.transferTo(new File(folder + "/" + resultFilename));
 
         return new ResponseEntity<>(filePath.toString(), HttpStatus.OK);
     }

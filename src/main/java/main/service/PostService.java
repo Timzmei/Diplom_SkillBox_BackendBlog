@@ -146,7 +146,17 @@ public class PostService {
     public PostsResponse getPostsModeration(int offset, int limit, String status, Principal principal) {
         Pageable pageable;
         pageable = PageRequest.of(offset, limit);
-        Page<Post> pageModerate = postRepository.findPostsModeration(status, principal.getName(), pageable);
+
+        Page<Post> pageModerate;
+
+        if (status.equals("NEW")){
+            pageModerate = postRepository.findPostsModeration(status, pageable);
+
+        }
+        else {
+            pageModerate = postRepository.findPostsMyIsactive(status, principal.getName(), pageable);
+
+        }
 
         return createPostsResponse(pageModerate, (int)pageModerate.getTotalElements());
     }

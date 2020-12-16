@@ -19,8 +19,11 @@ import java.util.List;
 @Repository
 public interface PostRepository extends PagingAndSortingRepository<Post, Integer> {
 
-    @Query(value = "SELECT p.* FROM post p WHERE p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW()", nativeQuery = true)
+    @Query(value = "SELECT p.* FROM post p WHERE p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time", nativeQuery = true)
     List<Post> findAllPosts();
+
+    @Query(value = "SELECT p.* FROM post p JOIN user u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 1 AND p.moderation_status = :status AND p.`time` < NOW() ORDER BY p.time", nativeQuery = true)
+    List<Post> findMyPosts(@Param("status") String status, @Param("email") String email);
 
     @Query(value = "SELECT p.*, (SELECT count(*) FROM post_comments c WHERE c.post_id = p.id) as comments FROM post p WHERE p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY comments DESC", nativeQuery = true)
     Page<Post> findAllOrderByCommentsDesc(Pageable pageable);
@@ -49,8 +52,8 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
     @Query(value = "SELECT p.* FROM post p WHERE p.id = :id", nativeQuery = true)
     Post findPostById(@Param("id") int id);
 
-    @Query(value = "SELECT p.* FROM post p JOIN user u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 1 AND p.moderation_status = :status AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
-    Page<Post> findPostsModeration(@Param("status") String status, @Param("email") String email, Pageable pageable);
+    @Query(value = "SELECT p.* FROM post p JOIN user u ON u.id = p.user_id WHERE p.is_active = 1 AND p.moderation_status = :status AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
+    Page<Post> findPostsModeration(@Param("status") String status, Pageable pageable);
 
     @Query(value = "SELECT p.* FROM post p JOIN user u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 0 AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
     Page<Post> findPostsMyInactive(Pageable pageable, @Param("email") String email);
@@ -58,6 +61,8 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
 
     @Query(value = "SELECT p.* FROM post p JOIN user u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 1 AND p.moderation_status = :status AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
     Page<Post> findPostsMyIsactive(@Param("status") String status, @Param("email") String email, Pageable pageable);
+
+
 
 
     @Modifying

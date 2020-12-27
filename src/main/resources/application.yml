@@ -8,6 +8,13 @@ spring:
 
     show-sql: false
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      enabled: true
+
+
 spring.mail:
   host: smtp.mailtrap.io
   username: 7deeb8027c6148
@@ -15,11 +22,6 @@ spring.mail:
   port: 2525
 mail.debug: true
 
-#  servlet:
-#    multipart:
-#      max-file-size: 10MB
-#      max-request-size: 10MB
-#      enabled: true
 
 #spring.mandatory-file-encoding=UTF-8
 #spring.http.encoding.charset=UTF-8

@@ -5,11 +5,14 @@ import main.api.request.ModerateRequest;
 import main.api.request.ProfileRequest;
 import main.api.response.*;
 import main.service.*;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.security.Principal;
 
@@ -24,9 +27,10 @@ public class ApiGeneralController {
     private final CommentService commentService;
     private final ModerateService moderateService;
     private final StatisticService statisticService;
+    private final UserService userService;
 
 
-    public ApiGeneralController(SettingsService settingsService, InitResponse initResponse, TagService tagService, CalendarService calendarService, StorageService storageService, CommentService commentService, ModerateService moderateService, StatisticService statisticService) {
+    public ApiGeneralController(SettingsService settingsService, InitResponse initResponse, TagService tagService, CalendarService calendarService, StorageService storageService, CommentService commentService, ModerateService moderateService, StatisticService statisticService, UserService userService) {
         this.settingsService = settingsService;
         this.initResponse = initResponse;
         this.tagService = tagService;
@@ -35,6 +39,7 @@ public class ApiGeneralController {
         this.commentService = commentService;
         this.moderateService = moderateService;
         this.statisticService = statisticService;
+        this.userService = userService;
     }
 
     @GetMapping("/api/settings")
@@ -98,11 +103,42 @@ public class ApiGeneralController {
 
     }
 
-    @PostMapping("/api/profile/my")
+    @PostMapping(value = "/api/profile/my", consumes = {"application/json", "multipart/form-data"})
+//    @PostMapping(value = "/api/profile/my")
+
     public ResponseEntity postProfileMy(
-            @RequestBody ProfileRequest profileRequest,
-            Principal principal) {
-        return userService.postModerate(profileRequest, principal);
+//            @RequestBody(required = false) String requestBody, // тут можеть быть форма в json без картинки
+//            @RequestPart(value = "photo", required = false) MultipartFile avatar, // вот тут может быть картинка
+//            @RequestPart(value = "email", required = false) String emailMP,
+//            @RequestPart(value = "name", required = false) String nameMP,
+//            @RequestPart(value = "password", required = false) String passwordMP,
+//            @RequestPart(value = "removePhoto", required = false) String removePhotoMP) {
+//        return userService
+//                .postApiProfileMy(requestBody, avatar, emailMP, nameMP, passwordMP, removePhotoMP);
+
+            @RequestPart(required = false) ProfileRequest profileRequest, // тут можеть быть форма в json без картинки
+
+            @RequestPart(value = "photo", required=false) MultipartFile file,
+            @RequestPart(value = "name", required=false) String name,
+            @RequestPart(value = "email", required=false) String email,
+            @RequestPart(value = "password", required=false) String password,
+            @RequestPart(value = "removePhoto", required=false) String removePhoto,
+            Principal principal) throws Exception {
+
+        System.out.println("profileRequest: " + profileRequest);
+        System.out.println("Имя: " + name);
+        System.out.println("почта: " + email);
+        System.out.println("пароль: " + password);
+
+
+        if (file == null){
+            return userService.editProfile1(profileRequest, principal);
+//            return userService.editProfile1(profileRequest);
+
+        }
+        return userService.editProfile(file, name, email, password, removePhoto, principal);
     }
+
+
 
 }

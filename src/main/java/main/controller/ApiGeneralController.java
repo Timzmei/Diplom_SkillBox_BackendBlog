@@ -104,19 +104,8 @@ public class ApiGeneralController {
     }
 
     @PostMapping(value = "/api/profile/my", consumes = {"application/json", "multipart/form-data"})
-//    @PostMapping(value = "/api/profile/my")
-
     public ResponseEntity postProfileMy(
-//            @RequestBody(required = false) String requestBody, // тут можеть быть форма в json без картинки
-//            @RequestPart(value = "photo", required = false) MultipartFile avatar, // вот тут может быть картинка
-//            @RequestPart(value = "email", required = false) String emailMP,
-//            @RequestPart(value = "name", required = false) String nameMP,
-//            @RequestPart(value = "password", required = false) String passwordMP,
-//            @RequestPart(value = "removePhoto", required = false) String removePhotoMP) {
-//        return userService
-//                .postApiProfileMy(requestBody, avatar, emailMP, nameMP, passwordMP, removePhotoMP);
-
-            @RequestPart(required = false) ProfileRequest profileRequest, // тут можеть быть форма в json без картинки
+            @RequestBody(required = false) ProfileRequest profileRequest, // тут можеть быть форма в json без картинки
 
             @RequestPart(value = "photo", required=false) MultipartFile file,
             @RequestPart(value = "name", required=false) String name,
@@ -133,8 +122,6 @@ public class ApiGeneralController {
 
         if (file == null){
             return userService.editProfile1(profileRequest, principal);
-//            return userService.editProfile1(profileRequest);
-
         }
         return userService.editProfile(file, name, email, password, removePhoto, principal);
     }

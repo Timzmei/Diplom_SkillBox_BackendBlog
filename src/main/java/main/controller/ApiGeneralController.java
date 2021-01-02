@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.security.Principal;
@@ -103,27 +104,25 @@ public class ApiGeneralController {
 
     }
 
-    @PostMapping(value = "/api/profile/my", consumes = {"application/json", "multipart/form-data"})
+    @PostMapping(value = "/api/profile/my", consumes = {"multipart/form-data"})
     public ResponseEntity postProfileMy(
-            @RequestBody(required = false) ProfileRequest profileRequest, // тут можеть быть форма в json без картинки
-
             @RequestPart(value = "photo", required=false) MultipartFile file,
             @RequestPart(value = "name", required=false) String name,
             @RequestPart(value = "email", required=false) String email,
-            @RequestPart(value = "password", required=false) String password,
+            @RequestPart(value = "password", required=false)String password,
             @RequestPart(value = "removePhoto", required=false) String removePhoto,
+            Principal principal) throws Exception {
+        return userService.editProfile(file, name, email, password, removePhoto, principal);
+    }
+
+    @PostMapping(value = "/api/profile/my", consumes = {"application/json"})
+    public ResponseEntity postProfileMyJSON(
+            @RequestBody (required = false) ProfileRequest profileRequest,
             Principal principal) throws Exception {
 
         System.out.println("profileRequest: " + profileRequest);
-        System.out.println("Имя: " + name);
-        System.out.println("почта: " + email);
-        System.out.println("пароль: " + password);
+        return userService.editProfile1(profileRequest, principal);
 
-
-        if (file == null){
-            return userService.editProfile1(profileRequest, principal);
-        }
-        return userService.editProfile(file, name, email, password, removePhoto, principal);
     }
 
 

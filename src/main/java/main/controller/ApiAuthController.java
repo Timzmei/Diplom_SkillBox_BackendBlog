@@ -12,7 +12,9 @@ import main.service.PasswordService;
 import main.service.RegisterService;
 import main.service.RestoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,8 +22,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
 
@@ -78,6 +85,18 @@ public class ApiAuthController {
 
         return ResponseEntity.ok(getLoginResponse(user.getUsername()));
     }
+
+    @GetMapping("/logout")
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity logout(
+            Principal principal
+    ){
+
+        SecurityContextHolder.clearContext();
+        return new ResponseEntity(new ResultResponse(true), HttpStatus.OK);
+    }
+
+
 
     @GetMapping("/check")
     public ResponseEntity<LoginResponse> check(Principal principal){

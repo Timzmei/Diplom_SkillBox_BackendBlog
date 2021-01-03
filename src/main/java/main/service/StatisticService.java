@@ -38,6 +38,9 @@ public class StatisticService {
     @Autowired
     private Tag2PostRepository tag2PostRepository;
 
+    @Autowired
+    private GlobalSettingsRepository globalSettingsRepository;
+
     @PreAuthorize("hasAuthority('user:write')")
     public StatisticResponse getMy(Principal principal) {
 
@@ -71,10 +74,11 @@ public class StatisticService {
 
     public ResponseEntity getAll(Principal principal) {
 
+
         User user = userRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
-        if (user.getIsModerator() == 0){
+        if (user.getIsModerator() == 0 && globalSettingsRepository.findAllGlobalSettings("STATISTICS_IS_PUBLIC").getValue().equals("NO")){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         StatisticResponse statisticResponse = new StatisticResponse();

@@ -46,8 +46,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticated()
                 .and()
                     .formLogin().disable()
-                .httpBasic()
-                .authenticationEntryPoint(new AuthenticationEntryPoint(){ //<< implementing this interface
+                    .logout()
+                    .logoutUrl("/api/auth/logout")
+                    .logoutSuccessUrl("/login")
+                    .deleteCookies("JSESSIONID")
+                    .clearAuthentication(true)
+                    .invalidateHttpSession(true)
+                    .and()
+                    .httpBasic()
+// Была проблема со всплывающим окном регистрации из-за заголовка "WWW-Authenticate: Basic". Реализация интерфейса AuthenticationEntryPoint его отключает
+                    .authenticationEntryPoint(new AuthenticationEntryPoint(){
                     @Override
                     public void commence(HttpServletRequest request, HttpServletResponse response,
                                          AuthenticationException authException) throws IOException, ServletException {
@@ -91,4 +99,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+
 }

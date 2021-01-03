@@ -1,10 +1,12 @@
 package main.controller;
 
+import main.api.request.LikeRequest;
 import main.api.request.PostRequest;
 import main.api.response.PostApiPostResponse;
 import main.api.response.PostResponse;
 import main.api.response.PostsResponse;
 import main.service.PostService;
+import main.service.PostVotesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +21,13 @@ public class ApiPostController {
 
     private final PostService postService;
 
+    private final PostVotesService postVotesService;
+
 
     @Autowired // через конструктор внедряем зависимость сервиса в контроллер
-    public ApiPostController(PostService postService) {
+    public ApiPostController(PostService postService, PostVotesService postVotesService) {
         this.postService = postService;
+        this.postVotesService = postVotesService;
     }
 
     @GetMapping("") // конкретный запрос обрабатываем
@@ -122,6 +127,24 @@ public class ApiPostController {
                 postRequest.getTags(),
                 id,
                 principal));
+    }
+
+    @PostMapping("/like")
+    @PreAuthorize("hasAuthority('user:moderate')")
+    public ResponseEntity postLike(
+            @RequestBody LikeRequest likeRequest,
+            Principal principal
+    ){
+       return postVotesService.addLike(likeRequest, principal);
+    }
+
+    @PostMapping("/dislike")
+    @PreAuthorize("hasAuthority('user:moderate')")
+    public ResponseEntity postDislike(
+            @RequestBody LikeRequest likeRequest,
+            Principal principal
+    ){
+        return postVotesService.addDislike(likeRequest, principal);
     }
 
 

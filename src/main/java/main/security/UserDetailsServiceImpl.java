@@ -27,4 +27,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("user " + email + " not found"));
         return SecurityUser.fromUser(user);
     }
+
+
 }

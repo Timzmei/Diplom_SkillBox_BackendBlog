@@ -3,10 +3,12 @@ package main.controller;
 import main.api.request.CommentRequest;
 import main.api.request.ModerateRequest;
 import main.api.request.ProfileRequest;
+import main.api.request.SettingsRequest;
 import main.api.response.*;
 import main.service.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +48,15 @@ public class ApiGeneralController {
     @GetMapping("/api/settings")
     private SettingsResponse settings(){
         return settingsService.getGlobalSettings();
+    }
+
+    @PutMapping("/api/settings")
+    @PreAuthorize("hasAuthority('user:moderate')")
+    private ResponseEntity putSettings(
+            @RequestBody (required = false) SettingsRequest settingsRequest,
+            Principal principal
+    ){
+        return settingsService.putGlobalSettings(settingsRequest);
     }
 
     @GetMapping("/api/init")
@@ -97,7 +108,6 @@ public class ApiGeneralController {
     }
 
     @GetMapping("/api/statistics/all")
-    // ДОДЕЛАТЬ - В случае, если публичный показ статистики блога запрещён (см. соответствующий параметр в global_settings) и текущий пользователь не модератор, должна выдаваться ошибка 401
     private ResponseEntity getStatisticAll(
             Principal principal) {
         return statisticService.getAll(principal);
@@ -118,7 +128,7 @@ public class ApiGeneralController {
     @PostMapping(value = "/api/profile/my", consumes = {"application/json"})
     public ResponseEntity postProfileMyJSON(
             @RequestBody (required = false) ProfileRequest profileRequest,
-            Principal principal) throws Exception {
+            Principal principal) {
 
         System.out.println("profileRequest: " + profileRequest);
         return userService.editProfile1(profileRequest, principal);

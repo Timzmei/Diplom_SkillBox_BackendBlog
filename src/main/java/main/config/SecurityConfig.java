@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .formLogin().disable()
                     .logout()
-                    .logoutUrl("/api/auth/logout")
+//                    .logoutUrl("/api/auth/logout")
                     .logoutSuccessUrl("/login")
                     .deleteCookies("JSESSIONID")
                     .clearAuthentication(true)

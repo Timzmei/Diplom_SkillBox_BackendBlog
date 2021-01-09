@@ -149,12 +149,16 @@ public class PostService {
 
         Page<Post> pageModerate;
 
-        if (status.equals("NEW")){
+        if (status.equals("new")){
             pageModerate = postRepository.findPostsModeration(status, pageable);
 
         }
         else {
-            pageModerate = postRepository.findPostsMyIsactive(status, principal.getName(), pageable);
+
+            User user = userRepository.findByEmail(principal.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+
+            pageModerate = postRepository.findPostsMyModerate(status, user.getId(), pageable);
 
         }
 
@@ -166,6 +170,7 @@ public class PostService {
         pageable = PageRequest.of(offset, limit);
 
         String email = "\'" + principal.getName() + "\'";
+
 
         if (status.equals("inactive")){
 

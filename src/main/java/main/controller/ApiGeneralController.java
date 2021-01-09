@@ -51,7 +51,6 @@ public class ApiGeneralController {
     }
 
     @PutMapping("/api/settings")
-    @PreAuthorize("hasAuthority('user:moderate')")
     private ResponseEntity putSettings(
             @RequestBody (required = false) SettingsRequest settingsRequest,
             Principal principal

@@ -18,17 +18,17 @@ public class StorageService {
 //    void init();
 
     public ResponseEntity<Object> store(MultipartFile file) throws IOException {
-        String folder = "src/main/resources/static/upload";
+        String folder = "upload";
 
         String[] uuidPath = UUID.randomUUID().toString().split("\\-", 3);
 
 
 
-        String resultPath = folder + "/" + uuidPath[0] + "/" + uuidPath[1] + "/" + uuidPath[2];
+        String resultPath = "/" + folder + "/" + uuidPath[0] + "/" + uuidPath[1] + "/" + uuidPath[2];
 
 
 
-        Path uploadDir = Paths.get(resultPath);
+        Path uploadDir = Paths.get("src/main/resources/static" + resultPath);
         if (!Files.exists(uploadDir)){
             Files.createDirectories(uploadDir);
         }
@@ -38,7 +38,7 @@ public class StorageService {
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
 
-        return new ResponseEntity<>(filePath.toString(), HttpStatus.OK);
+        return new ResponseEntity<>(resultPath + "/" + file.getOriginalFilename(), HttpStatus.OK);
     }
 
 //    Stream<Path> loadAll();

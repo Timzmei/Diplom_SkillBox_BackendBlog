@@ -44,7 +44,7 @@ public class PostResponse {
         this.timestamp = post.getTime().getTime() / 1000;
         this.user = new UserPostResponse(post.getUserId());
         this.title = post.getTitle();
-        this.announce = post.getText();
+        this.announce = setAnnounce(post);
         this.likeCount = getLikeCount(post);
         this.dislikeCount = getDislikeCount(post);
 
@@ -62,8 +62,17 @@ public class PostResponse {
         return announce;
     }
 
-    public void setAnnounce(String announce) {
-        this.announce = announce;
+    public String setAnnounce(Post post) {
+
+        String announce = post.getText()
+                .replaceAll("</div>", " ")
+                .replaceAll("\\<.*?\\>", "")
+                .replaceAll("&nbsp;", " ");
+
+        if (announce.length() > 400){
+            return announce.substring(0, 400) + "...";
+        }
+        return announce;
     }
 
     public long getLikeCount(Post post) {

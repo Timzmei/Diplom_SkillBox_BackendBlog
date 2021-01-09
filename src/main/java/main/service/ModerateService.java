@@ -33,8 +33,16 @@ public class ModerateService {
         if (user.getIsModerator() == 0){
             return new ResponseEntity<>(new ResultResponse(false), HttpStatus.OK);
         }
+        String moderation_status;
 
-        postRepository.updateModeratePost(moderateRequest.getDecision(), moderateRequest.getPost_id(), user.getId());
+        if (moderateRequest.getDecision().equals("accept")) {
+            moderation_status = "ACCEPTED";
+        }
+        else{
+            moderation_status = "DECLINED";
+        }
+
+        postRepository.updateModeratePost(moderation_status, moderateRequest.getPost_id(), user.getId());
 
         if (postRepository.findPostById(moderateRequest.getPost_id()).getModerationStatus().equals("NEW")){
             return new ResponseEntity<>(new ResultResponse(false), HttpStatus.OK);

@@ -6,6 +6,7 @@ import main.model.repo.GlobalSettingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,7 @@ public class SettingsService {
         return settingsResponse;
     }
 
+    @PreAuthorize("hasAuthority('user:moderate')")
     public ResponseEntity putGlobalSettings(SettingsRequest settingsRequest) {
         String MULTIUSER_MODE = settingsRequest.isMultiuseMode() ? "YES" : "NO";
         String POST_PREMODERATION = settingsRequest.isPostPremoderation() ? "YES" : "NO";

@@ -93,6 +93,8 @@ public class ApiAuthController {
     ){
 
         SecurityContextHolder.clearContext();
+
+
         return new ResponseEntity(new ResultResponse(true), HttpStatus.OK);
     }
 

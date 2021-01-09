@@ -55,6 +55,9 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
     @Query(value = "SELECT p.* FROM post p JOIN user u ON u.id = p.user_id WHERE p.is_active = 1 AND p.moderation_status = :status AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
     Page<Post> findPostsModeration(@Param("status") String status, Pageable pageable);
 
+    @Query(value = "SELECT p.* FROM post p WHERE p.moderator_id = :id AND p.is_active = 1 AND p.moderation_status = :status AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
+    Page<Post> findPostsMyModerate(@Param("status") String status, @Param("id") int id, Pageable pageable);
+
     @Query(value = "SELECT p.* FROM post p JOIN user u ON u.id = p.user_id WHERE u.email = :email AND p.is_active = 0 AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
     Page<Post> findPostsMyInactive(Pageable pageable, @Param("email") String email);
 

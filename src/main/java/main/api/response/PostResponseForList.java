@@ -7,34 +7,36 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class PostResponse {
+public class PostResponseForList {
     private String text;
     private long id;
     private long timestamp;
     private UserPostResponse user;
     private String title;
+    private String announce;
     private long likeCount;
     private long dislikeCount;
+    private long commentCount;
     private long viewCount;
+
     private boolean active;
     private List<CommentResponse> comments;
     private List<String> tags;
 
-
-
-
-    public PostResponse(List<CommentResponse> comments, Post post, List<String> tags) {
+    public PostResponseForList(Post post) {
         this.id = post.getId();
         this.timestamp = post.getTime().getTime() / 1000;
-        this.active = setActive(post.getIsActive());
-        this.user = new UserPostResponse(post);
+        this.user = new UserPostResponse(post.getUser());
         this.title = post.getTitle();
-        this.text = post.getText();
+        this.announce = setAnnounce(post);
         this.likeCount = getLikeCount(post);
         this.dislikeCount = getDislikeCount(post);
+        this.commentCount = setCommentCount(post);
         this.viewCount = post.getViewCount();
-        this.comments = comments;
-        this.tags = tags;
+    }
+
+    public void setAnnounce(String announce) {
+        this.announce = announce;
     }
 
     public long getLikeCount() {
@@ -43,6 +45,10 @@ public class PostResponse {
 
     public long getDislikeCount() {
         return dislikeCount;
+    }
+
+    public void setCommentCount(long commentCount) {
+        this.commentCount = commentCount;
     }
 
     public boolean isActive() {
@@ -57,6 +63,10 @@ public class PostResponse {
         this.active = a == 1;
 
         return this.active;
+    }
+
+    public String getAnnounce() {
+        return announce;
     }
 
     public String setAnnounce(Post post) {
@@ -112,6 +122,24 @@ public class PostResponse {
 
     public void setDislikeCount(long dislikeCount) {
         this.dislikeCount = dislikeCount;
+    }
+
+    public long getCommentCount() {
+        return commentCount;
+    }
+
+    public long setCommentCount(Post post) {
+
+//        System.out.println(post.getComments());
+
+        if(!(post.getComments() == null)) {
+            commentCount = post.getComments().size();
+        }
+        else {
+            commentCount = 0;
+        }
+
+        return commentCount;
     }
 
     public long getId() {

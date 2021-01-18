@@ -22,7 +22,7 @@ public class RegisterErrorResponse {
     }
 
     public void setName() {
-        this.name = "Имя указано неверно";
+        this.name = "Имя указано неверно, Имя может содержать буквы латинского алфавита, цифры или знак подчеркивания";
     }
 
     public void setPassword() {

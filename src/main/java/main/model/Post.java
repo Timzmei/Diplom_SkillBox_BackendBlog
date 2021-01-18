@@ -1,10 +1,17 @@
 package main.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Post
 {
@@ -48,117 +55,21 @@ public class Post
     @NotNull
     private int viewCount;
 
-    @Transient
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "Tags2Post",
-            joinColumns = {@JoinColumn(name = "post_id")},
-            inverseJoinColumns = {@JoinColumn(name = "tag_id")}
-    )
-    private List<Tag> tags;
+////    @Transient
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinTable(name = "Tags2Post",
+//            joinColumns = {@JoinColumn(name = "post_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "tag_id")}
+//    )
+//    transient List<Tag> tags;
 
-    @Transient
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "PostVotes",
-            joinColumns = {@JoinColumn(name = "post_id")},
-            inverseJoinColumns = {@JoinColumn(name = "value")}
-    )
+    @OneToMany(mappedBy="post")
+    private List<Tags2Post> tags;
 
-    private List<Byte> like;
+    @OneToMany(mappedBy="post")
+    private List<PostVotes> like;
 
-    @Transient
-    @OneToMany(mappedBy="post_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="post")
     private List<PostComments> comments;
 
-
-    public List<Byte> getLike() {
-        return like;
-    }
-
-    public void setLike(List<Byte> like) {
-        this.like = like;
-    }
-
-    public List<PostComments> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<PostComments> comments) {
-        this.comments = comments;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public byte getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(byte isActive) {
-        this.isActive = isActive;
-    }
-
-    public ModerationStatus getModerationStatus() {
-        return moderationStatus;
-    }
-
-    public void setModerationStatus(ModerationStatus moderationStatus) {
-        this.moderationStatus = moderationStatus;
-    }
-
-    public User getModeratorId() {
-        return moderator;
-    }
-
-    public void setModeratorId(User moderatorId) {
-        this.moderator = moderatorId;
-    }
-
-    public User getUserId() {
-        return user;
-    }
-
-    public void setUserId(User userId) {
-        this.user = userId;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public int getViewCount() {
-        return viewCount;
-    }
-
-    public void setViewCount(int viewCount) {
-        this.viewCount = viewCount;
-    }
 }

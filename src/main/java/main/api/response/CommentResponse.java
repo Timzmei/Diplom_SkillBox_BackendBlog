@@ -14,7 +14,7 @@ public class CommentResponse {
         this.id = postComments.getId();
         this.timestamp = postComments.getTime().getTime() / 1000;
         this.text = postComments.getText();
-        this.user = new UserCommentResponse(postComments.getUserId());
+        this.user = new UserCommentResponse(postComments.getUser());
     }
 
     public int getId() {

@@ -16,7 +16,7 @@ public class SettingsService {
     private GlobalSettingsRepository globalSettingsRepository;
 
     public SettingsResponse getGlobalSettings(){
-        System.out.println(globalSettingsRepository.findAllGlobalSettings("MULTIUSER_MODE").getValue());
+//        System.out.println(globalSettingsRepository.findAllGlobalSettings("MULTIUSER_MODE").getValue());
 
         SettingsResponse settingsResponse = new SettingsResponse();
         settingsResponse.setMultiuseMode(globalSettingsRepository.findAllGlobalSettings("MULTIUSER_MODE").getValue().equals("YES"));

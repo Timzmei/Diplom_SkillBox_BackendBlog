@@ -100,11 +100,11 @@ public class UserService {
         MyProfileResponse myProfileResponse = new MyProfileResponse();
         myProfileResponse.setResult(true);
 
-        System.out.println(myProfileResponse.isResult());
+//        System.out.println(myProfileResponse.isResult());
 
         if (!checkMyProfile(file, name, email, password, principal, myProfileResponse)){
 
-            System.out.println(myProfileResponse.isResult());
+//            System.out.println(myProfileResponse.isResult());
 
             return new ResponseEntity(myProfileResponse, HttpStatus.OK);
         }

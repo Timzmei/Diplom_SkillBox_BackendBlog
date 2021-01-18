@@ -29,14 +29,14 @@ public class PostVotesService {
         User user = userRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
-        if (postVotesRepository.findVotes(likeRequest.getPost_id(), user.getId()).getValue() == 1){
-            return new ResponseEntity(new ResultResponse(false), HttpStatus.OK);
-        }
-
-        else if (postVotesRepository.findVotes(likeRequest.getPost_id(), user.getId()).getValue() == 0) {
+        if (postVotesRepository.findVotes(likeRequest.getPost_id(), user.getId()) == null || postVotesRepository.findVotes(likeRequest.getPost_id(), user.getId()).getValue() == 0) {
 
             postVotesRepository.updateVotes(likeRequest.getPost_id(), user.getId(), (byte) 1);
             return new ResponseEntity(new ResultResponse(true), HttpStatus.OK);
+        }
+        else if (postVotesRepository.findVotes(likeRequest.getPost_id(), user.getId()).getValue() == 1){
+                return new ResponseEntity(new ResultResponse(false), HttpStatus.OK);
+
         }
 
         postVotesRepository.insertVotes(new Date(), (byte) 1, likeRequest.getPost_id(), user.getId());

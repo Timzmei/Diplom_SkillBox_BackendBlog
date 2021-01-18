@@ -21,7 +21,7 @@ public class MyProfileResponse {
             errors.setPhoto("Фото слишком большое, нужно не более 5 Мб");
         }
         else if (typeError.equals("name")){
-            errors.setName("Имя указано неверно");
+            errors.setName("Имя указано неверно, Имя может содержать буквы латинского алфавита, цифры или знак подчеркивания");
         }
         else if (typeError.equals("password")){
             errors.setPassword("Пароль короче 6-ти символов");

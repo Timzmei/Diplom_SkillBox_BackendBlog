@@ -3,6 +3,7 @@ package main.service;
 import main.api.response.PostResponse;
 import main.api.response.StatisticResponse;
 import main.model.Post;
+import main.model.PostVotes;
 import main.model.User;
 import main.model.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,10 +114,10 @@ public class StatisticService {
         long likeCount = 0;
 
         if(!(post.getLike() == null)) {
-            LinkedList<Byte> like = new LinkedList<>(post.getLike());
-            for (Byte l : like
+            LinkedList<PostVotes> like = new LinkedList<>(post.getLike());
+            for (PostVotes l : like
             ) {
-                if (l == 1) {
+                if (l.getValue() == 1) {
                     likeCount++;
                 }
 
@@ -131,10 +132,10 @@ public class StatisticService {
 
         if(!(post.getLike() == null)) {
 
-            LinkedList<Byte> like = new LinkedList<>(post.getLike());
-            for (Byte l : like
+            LinkedList<PostVotes> like = new LinkedList<>(post.getLike());
+            for (PostVotes l : like
             ) {
-                if (l == 0) {
+                if (l.getValue() == 0) {
                     dislikeCount++;
                 }
 

@@ -12,7 +12,7 @@ public class PostsResponse {
     private int count;
 
     @JsonProperty("posts")
-    private List<PostResponse> posts;
+    private List<PostResponseForList> posts;
 
 //    public PostsResponse(int count, List<PostResponse> posts) {
 //        this.count = count;
@@ -27,11 +27,11 @@ public class PostsResponse {
         this.count = count;
     }
 
-    public List<PostResponse> getPosts() {
+    public List<PostResponseForList> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<PostResponse> posts) {
+    public void setPosts(List<PostResponseForList> posts) {
         this.posts = posts;
     }
 }

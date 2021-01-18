@@ -129,7 +129,7 @@ public class ApiGeneralController {
             @RequestBody (required = false) ProfileRequest profileRequest,
             Principal principal) {
 
-        System.out.println("profileRequest: " + profileRequest);
+//        System.out.println("profileRequest: " + profileRequest);
         return userService.editProfile1(profileRequest, principal);
 
     }

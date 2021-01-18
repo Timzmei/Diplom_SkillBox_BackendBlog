@@ -11,8 +11,8 @@ public class UserResponse {
 
 
     public UserResponse(Post post) {
-        id = post.getUserId().getId();
-        name = post.getUserId().getName();
+        id = post.getUser().getId();
+        name = post.getUser().getName();
     }
 
 }

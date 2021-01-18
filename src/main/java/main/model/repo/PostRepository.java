@@ -26,19 +26,19 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
     List<Post> findMyPosts(@Param("status") String status, @Param("email") String email);
 
     @Query(value = "SELECT p.*, (SELECT count(*) FROM post_comments c WHERE c.post_id = p.id) as comments FROM post p WHERE p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY comments DESC", nativeQuery = true)
-    Page<Post> findAllOrderByCommentsDesc(Pageable pageable);
+    Page<Post> findAllPostsByCommentsDesc(Pageable pageable);
 
     @Query(value = "SELECT p.* FROM post p WHERE p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
-    Page<Post> findAllOrderByTimeDesc(Pageable pageable);
+    Page<Post> findAllPostsByTimeDesc(Pageable pageable);
 
     @Query(value = "SELECT p.* FROM post p WHERE p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time", nativeQuery = true)
-    Page<Post> findAllOrderByTime(Pageable pageable);
+    Page<Post> findAllPostsByTime(Pageable pageable);
 
     @Query(value = "SELECT p.*, (SELECT sum(value) FROM post_votes c WHERE c.post_id = p.id) as votes FROM post p WHERE p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY votes DESC", nativeQuery = true)
-    Page<Post> findAllOrderByVotesDesc(Pageable pageable);
+    Page<Post> findAllPostsByVotesDesc(Pageable pageable);
 
     @Query(value = "SELECT p.* FROM post p WHERE p.text LIKE %:query% AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time DESC", nativeQuery = true)
-    Page<Post> findAllOrderBySearch(@Param("query") String query, Pageable pageable);
+    Page<Post> findAllPostsBySearch(@Param("query") String query, Pageable pageable);
 
     @Query(value = "SELECT p.* FROM post p WHERE p.time LIKE :date% AND p.is_active = 1 AND p.moderation_status = 'ACCEPTED' AND p.`time` < NOW() ORDER BY p.time", nativeQuery = true)
     Page<Post> findAllPostsByDate(@Param("date") String date, Pageable pageable);

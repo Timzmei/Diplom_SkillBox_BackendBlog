@@ -1,9 +1,7 @@
 package main.service;
 
 import main.api.response.*;
-import main.model.Post;
-import main.model.PostComments;
-import main.model.User;
+import main.model.*;
 import main.model.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,25 +46,27 @@ public class PostService {
 
         Pageable pageable;
         pageable = PageRequest.of(offset, limit);
-        Page<Post> pageOfTags = postRepository.findAllOrderByTimeDesc(pageable);
+        Page<Post> postsPage;
 
         if (mode.equals("recent")) {
-            pageOfTags = postRepository.findAllOrderByTimeDesc(pageable);
+            postsPage = postRepository.findAllPostsByTimeDesc(pageable);
         } else if (mode.equals("popular")) {
-            pageOfTags = postRepository.findAllOrderByCommentsDesc(pageable);
+            postsPage = postRepository.findAllPostsByCommentsDesc(pageable);
         } else if (mode.equals("best")) {
-            pageOfTags = postRepository.findAllOrderByVotesDesc(pageable);
+            postsPage = postRepository.findAllPostsByVotesDesc(pageable);
         } else if (mode.equals("early")) {
-            pageOfTags = postRepository.findAllOrderByTime(pageable);
+            postsPage = postRepository.findAllPostsByTime(pageable);
+        } else {
+            postsPage = postRepository.findAllPostsByTimeDesc(pageable);
         }
 
-        return createPostsResponse(pageOfTags, postRepository.findAllPosts().size());
+        return createPostsResponse(postsPage, postRepository.findAllPosts().size());
     }
 
     public PostsResponse getPostsSearch(int offset, int limit, String query) {
         Pageable pageable;
         pageable = PageRequest.of(offset, limit);
-        Page<Post> pageOfTags = postRepository.findAllOrderBySearch(query, pageable);
+        Page<Post> pageOfTags = postRepository.findAllPostsBySearch(query, pageable);
 
         return createPostsResponse(pageOfTags, (int)pageOfTags.getTotalElements());
     }
@@ -92,6 +92,8 @@ public class PostService {
         List<PostComments> commentsList = commentRepository.findComments(id);
         List<String> tagList = tagRepository.getTagsByPost(id);
 
+//        System.out.println(tagList);
+
         List<CommentResponse> commentResponseList = new ArrayList<>();
         for (PostComments c : commentsList) {
             commentResponseList.add(new CommentResponse(c));
@@ -110,7 +112,7 @@ public class PostService {
             User user = userRepository.findByEmail(principal.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
-            if (!(post.getUserId().getId() == user.getId()) || user.getIsModerator() == 0) {
+            if (!(post.getUser().getId() == user.getId()) || user.getIsModerator() == 0) {
                 postRepository.updateViewPost(post.getId(), post.getViewCount() + 1);
             }
         }
@@ -132,9 +134,13 @@ public class PostService {
 
     private PostsResponse createPostsResponse(Page<Post> pageOfTags, int size){
 
-        List<PostResponse> postResponseList = new ArrayList<>();
+        List<PostResponseForList> postResponseList = new ArrayList<>();
         for (Post p : pageOfTags) {
-            postResponseList.add(new PostResponse(p));
+//            System.out.println(p.getComments());
+//            System.out.println(p.getLike());
+//            System.out.println(p.getTags());
+
+            postResponseList.add(new PostResponseForList(p));
         }
         PostsResponse postsResponse = new PostsResponse();
         postsResponse.setPosts(postResponseList);
@@ -214,13 +220,28 @@ public class PostService {
         else {
             User user = userRepository.findByEmail(principal.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("user not found"));
-            postRepository.insertPost(datePost, active, title, text, user.getId());
-            int id = postRepository.getLastId();
+//            postRepository.insertPost(datePost, active, title, text, user.getId());
+
+            Post post = new Post();
+            post.setTime(datePost);
+            post.setIsActive(active);
+            post.setTitle(title);
+            post.setText(text);
+            post.setUser(user);
+
+            post = postRepository.save(post);
 
             for (String t: tags
             ) {
-                tagRepository.insertTag(t);
-                tag2PostRepository.insertTag2Post(id, tagRepository.getByName(t));
+//                tagRepository.insertTag(t);
+//                tag2PostRepository.insertTag2Post(id, tagRepository.getByName(t));
+                Tag tag = new Tag();
+                tag.setName(t);
+                Tags2Post tags2Post = new Tags2Post();
+                tags2Post.setPostId(post);
+                tags2Post.setTagId(tagRepository.save(tag));
+                tag2PostRepository.save(tags2Post);
+
             }
 
             postApiPostResponse = new PostApiPostResponse(true);

@@ -17,9 +17,9 @@ public class UserPostResponse {
     }
 
     public UserPostResponse(Post post) {
-        this.id = post.getUserId().getId();
-        this.name = post.getUserId().getName();
-        this.photo = post.getUserId().getPhoto();
+        this.id = post.getUser().getId();
+        this.name = post.getUser().getName();
+        this.photo = post.getUser().getPhoto();
     }
 
     public int getId() {

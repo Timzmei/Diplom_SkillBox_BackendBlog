@@ -16,14 +16,14 @@ public class PostComments {
     @Column(name = "parent_id")
     private Integer parentId;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch =FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable=false)
+    @ManyToOne(optional=false, cascade=CascadeType.ALL)
+    @JoinColumn(name = "post_id", nullable = false)
 //    @Column(name = "post_id")
 //    @NotNull
     private Post post;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch =FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable=false)
+    @ManyToOne(optional=false, cascade=CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false)
 //    @Column(name = "user_id")
 //    @NotNull
     private User user;
@@ -43,28 +43,28 @@ public class PostComments {
         this.id = id;
     }
 
-    public int getParentId() {
+    public Integer getParentId() {
         return parentId;
     }
 
-    public void setParentId(int parentId) {
+    public void setParentId(Integer parentId) {
         this.parentId = parentId;
     }
 
-    public Post getPostId() {
+    public Post getPost() {
         return post;
     }
 
-    public void setPostId(Post postId) {
-        this.post = postId;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
-    public User getUserId() {
+    public User getUser() {
         return user;
     }
 
-    public void setUserId(User userId) {
-        this.user = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Date getTime() {

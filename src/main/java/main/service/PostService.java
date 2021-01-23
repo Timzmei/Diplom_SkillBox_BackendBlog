@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.*;
@@ -205,6 +206,7 @@ public class PostService {
         return null;
     }
 
+    @Transactional
     public PostApiPostResponse postPosts(long timestamp, byte active, String title, String text, List<String> tags, Principal principal) {
 
         Date datePost = setDatePost(timestamp);
@@ -264,11 +266,32 @@ public class PostService {
 
         else {
             postRepository.updatePost(datePost, active, title, text, id);
-            for (String t: tags
-            ) {
-                tagRepository.insertTag(t);
-                tag2PostRepository.insertTag2Post(id, tagRepository.getByName(t));
+
+            List<String> oldListTags = tagRepository.getTagsByPost(id);
+
+            Post post = postRepository.findPostById(id);
+
+            for (String t: tags) {
+
+                if (!oldListTags.contains(t)){
+                    Tag tag = new Tag();
+                    tag.setName(t);
+                    Tags2Post tags2Post = new Tags2Post();
+                    tags2Post.setPostId(post);
+                    tags2Post.setTagId(tagRepository.save(tag));
+                    tag2PostRepository.save(tags2Post);
+                }
+                else {
+                    oldListTags.remove(t);
+                }
             }
+
+            if (oldListTags.size() > 0) {
+                for (String t : oldListTags) {
+                    tag2PostRepository.delete(tag2PostRepository.getTags2Post(tagRepository.getByName(t), id));
+                }
+            }
+
             postApiPostResponse = new PostApiPostResponse(true);
 
         }

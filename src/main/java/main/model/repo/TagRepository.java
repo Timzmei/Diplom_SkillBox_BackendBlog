@@ -25,7 +25,7 @@ public interface TagRepository extends CrudRepository<Tag, Integer> {
     List<String> getTagsByPost(@Param("post_id") int post_id);
 
     @Query(nativeQuery = true, value = "SELECT t.id FROM tag t WHERE t.name = :name")
-    int getByName(@Param("name") String name);
+    Integer getByName(@Param("name") String name);
 
     @Query(nativeQuery = true, value = "INSERT IGNORE INTO (name) VALUES (:name)")
     void insertTag(@Param("name") String name);

@@ -112,7 +112,7 @@ public class ApiPostController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('user:moderate')")
+    @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<PostApiPostResponse> putPost(
             @PathVariable int id,
             @RequestBody PostRequest postRequest,

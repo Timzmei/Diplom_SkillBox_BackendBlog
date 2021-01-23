@@ -28,7 +28,7 @@ public class StorageService {
 
 
 
-        Path uploadDir = Paths.get("src/main/resources/static" + resultPath);
+        Path uploadDir = Paths.get(resultPath);
         if (!Files.exists(uploadDir)){
             Files.createDirectories(uploadDir);
         }

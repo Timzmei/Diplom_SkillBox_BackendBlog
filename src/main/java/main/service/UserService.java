@@ -44,7 +44,7 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
         String file = folder + "/" + user.getId();
-        String resultPath = "src/main/resources/static/" + folder + "/" + user.getId();
+        String resultPath = folder + "/" + user.getId();
 //        String resultPath2 = "target/classes/static/" + folder + "/" + user.getId();
 
         Path uploadDir = Paths.get(resultPath);

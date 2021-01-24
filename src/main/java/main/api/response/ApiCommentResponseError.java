@@ -31,7 +31,7 @@ public class ApiCommentResponseError {
 
 class ErrorCommentResponse{
     @JsonProperty("text")
-    private String text;
+    private final String text;
 
     public ErrorCommentResponse(String text) {
         this.text = setText(text);

@@ -5,7 +5,7 @@ import main.model.User;
 public class UserCommentResponse {
     private int id;
     private String name;
-    private String photo;
+    private final String photo;
 
     public UserCommentResponse(User user) {
         this.id = user.getId();

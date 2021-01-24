@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 
 public class UserResponse {
 
-    private int id;
-    private String name;
+    private final int id;
+    private final String name;
 
 
     public UserResponse(Post post) {

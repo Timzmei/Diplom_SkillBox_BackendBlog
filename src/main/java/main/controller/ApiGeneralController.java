@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.security.Principal;
 
+@SuppressWarnings("rawtypes")
 @RestController
 public class ApiGeneralController {
 

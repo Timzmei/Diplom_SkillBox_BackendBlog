@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -34,7 +35,7 @@ public class StorageService {
         }
 
 
-        Path filePath = uploadDir.resolve(file.getOriginalFilename());
+        Path filePath = uploadDir.resolve(Objects.requireNonNull(file.getOriginalFilename()));
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
 

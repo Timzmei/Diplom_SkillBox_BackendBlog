@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -51,7 +52,7 @@ public class UserService {
         if (!Files.exists(uploadDir)){
             Files.createDirectories(uploadDir);
         }
-        Path filePath = uploadDir.resolve(newPhoto.getOriginalFilename());
+        Path filePath = uploadDir.resolve(Objects.requireNonNull(newPhoto.getOriginalFilename()));
         File resizeFile = new File(String.valueOf(filePath));
         simpleResizeImage(newPhoto, resizeFile);
 

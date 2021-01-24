@@ -5,10 +5,10 @@ import main.model.PostComments;
 public class CommentResponse {
 
 
-    private int id;
-    private long timestamp;
-    private String text;
-    private UserCommentResponse user;
+    private final int id;
+    private final long timestamp;
+    private final String text;
+    private final UserCommentResponse user;
 
     public CommentResponse(PostComments postComments) {
         this.id = postComments.getId();

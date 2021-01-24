@@ -23,6 +23,7 @@ public class ModerateService {
     @Autowired
     private UserRepository userRepository;
 
+    @SuppressWarnings("EqualsBetweenInconvertibleTypes")
     @PreAuthorize("hasAuthority('user:moderate')")
     public ResponseEntity postModerate(ModerateRequest moderateRequest, Principal principal) {
 

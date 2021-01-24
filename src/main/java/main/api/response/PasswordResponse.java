@@ -8,10 +8,10 @@ public class PasswordResponse  {
 
 
     @JsonProperty("result")
-    private boolean result;
+    private final boolean result;
 
     @JsonProperty("error")
-    private PasswordResponseError passwordResponseError;
+    private final PasswordResponseError passwordResponseError;
 
     public PasswordResponse() {
         this.result = setResult();
@@ -31,13 +31,13 @@ public class PasswordResponse  {
 class PasswordResponseError{
 
     @JsonProperty("code")
-    private String code;
+    private final String code;
 
     @JsonProperty("password")
-    private String password;
+    private final String password;
 
     @JsonProperty("captcha")
-    private String captcha;
+    private final String captcha;
 
     public PasswordResponseError() {
         this.code = setCode();

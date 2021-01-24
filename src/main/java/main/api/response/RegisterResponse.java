@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class RegisterResponse {
 
     @JsonProperty("result")
-    private Boolean result;
+    private final Boolean result;
     @JsonProperty("errors")
     private RegisterErrorResponse errors;
 

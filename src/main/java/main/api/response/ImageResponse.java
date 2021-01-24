@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ImageResponse {
 
     @JsonProperty("result")
-    private Boolean result;
+    private final Boolean result;
     @JsonProperty("errors")
     private ErrorsResponse errors;
 

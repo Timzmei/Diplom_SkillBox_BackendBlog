@@ -7,7 +7,7 @@ import lombok.Data;
 public class ResultResponse {
 
     @JsonProperty("result")
-    private Boolean result;
+    private final Boolean result;
 
     public ResultResponse(Boolean result) {
         this.result = setResult(result);

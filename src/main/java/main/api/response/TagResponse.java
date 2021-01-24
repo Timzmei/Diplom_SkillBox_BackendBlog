@@ -6,9 +6,9 @@ import main.model.Tag;
 public class TagResponse {
 
     @JsonProperty("name")
-    private String name;
+    private final String name;
     @JsonProperty("weight")
-    private double weight;
+    private final double weight;
 
     public TagResponse(String name, double weight) {
         this.name = name;

@@ -15,7 +15,5 @@ public class LoginResponse {
     }
 
     public LoginResponse() {
-        this.result = result;
-        this.userLoginResponse = userLoginResponse;
     }
 }

@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
 
+@SuppressWarnings("ALL")
 @RestController
 @RequestMapping("/api/auth") // все запросы этого контроллера будут начинаться с этого префикс
 public class ApiAuthController {

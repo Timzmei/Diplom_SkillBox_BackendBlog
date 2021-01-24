@@ -27,7 +27,7 @@ public class SettingsService {
     }
 
     @PreAuthorize("hasAuthority('user:moderate')")
-    public ResponseEntity putGlobalSettings(SettingsRequest settingsRequest) {
+    public ResponseEntity<Boolean> putGlobalSettings(SettingsRequest settingsRequest) {
         String MULTIUSER_MODE = settingsRequest.isMultiuseMode() ? "YES" : "NO";
         String POST_PREMODERATION = settingsRequest.isPostPremoderation() ? "YES" : "NO";
         String STATISTICS_IS_PUBLIC = settingsRequest.isStatisticIsPublic() ? "YES" : "NO";
@@ -36,7 +36,7 @@ public class SettingsService {
         globalSettingsRepository.insertSettings("POST_PREMODERATION", POST_PREMODERATION);
         globalSettingsRepository.insertSettings("STATISTICS_IS_PUBLIC", STATISTICS_IS_PUBLIC);
 
-    return new ResponseEntity(true, HttpStatus.OK);
+    return new ResponseEntity<>(true, HttpStatus.OK);
 
     }
 }

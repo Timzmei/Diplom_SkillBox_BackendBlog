@@ -4,7 +4,6 @@ import com.github.cage.Cage;
 import com.github.cage.GCage;
 import main.api.response.AuthCaptchaResponse;
 import main.model.repo.CaptchaRepository;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Random;
 
 @Service
 @Transactional
@@ -58,9 +57,7 @@ public class CaptchaService {
         byte[] imageInByte = baos.toByteArray();
         baos.close();
 
-        String encodedString = "data:image/png;base64," + Base64.getEncoder().encodeToString(imageInByte);
-
-        return encodedString;
+        return "data:image/png;base64," + Base64.getEncoder().encodeToString(imageInByte);
     }
 
     private BufferedImage ImResizer (BufferedImage image){
@@ -84,8 +81,7 @@ public class CaptchaService {
     }
     private String generateSecretKey()
     {
-        String generatedString = RandomStringUtils.randomAlphanumeric(10);
 
-        return generatedString;
+        return RandomStringUtils.randomAlphanumeric(10);
     }
 }

@@ -36,8 +36,6 @@ public class RestoreService {
 
         mailSender.mailSender(email, "ActivationCode", message);
 
-        ResultResponse resultResponse = new ResultResponse(true);
-
-        return resultResponse;
+        return new ResultResponse(true);
     }
 }

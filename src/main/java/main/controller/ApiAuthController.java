@@ -36,7 +36,6 @@ import java.security.Principal;
 @RequestMapping("/api/auth") // все запросы этого контроллера будут начинаться с этого префикс
 public class ApiAuthController {
 
-    private final AuthChekResponse authChekResponse;
     private final CaptchaService captchaService;
     private final RegisterService registerService;
     private final AuthenticationManager authenticationManager;
@@ -47,7 +46,6 @@ public class ApiAuthController {
 
     @Autowired
     public ApiAuthController(AuthChekResponse authChekResponse, CaptchaService captchaService, RegisterService registerService, AuthenticationManager authenticationManager, UserRepository userRepository, PostRepository postRepository, RestoreService restoreService, PasswordService passwordService) {
-        this.authChekResponse = authChekResponse;
         this.captchaService = captchaService;
         this.registerService = registerService;
         this.authenticationManager = authenticationManager;

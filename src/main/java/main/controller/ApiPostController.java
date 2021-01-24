@@ -115,8 +115,7 @@ public class ApiPostController {
     @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<PostApiPostResponse> putPost(
             @PathVariable int id,
-            @RequestBody PostRequest postRequest,
-            Principal principal) {
+            @RequestBody PostRequest postRequest) {
 
 
         return ResponseEntity.ok(postService.putPosts(
@@ -125,8 +124,8 @@ public class ApiPostController {
                 postRequest.getTitle(),
                 postRequest.getText(),
                 postRequest.getTags(),
-                id,
-                principal));
+                id
+        ));
     }
 
     @PostMapping("/like")

@@ -3,8 +3,6 @@ package main.service;
 import main.api.request.CommentRequest;
 import main.api.response.ApiCommentResponse;
 import main.api.response.ApiCommentResponseError;
-import main.model.Post;
-import main.model.PostComments;
 import main.model.User;
 import main.model.repo.CommentRepository;
 import main.model.repo.PostRepository;

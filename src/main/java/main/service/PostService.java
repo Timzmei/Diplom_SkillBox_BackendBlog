@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 @Service
@@ -47,18 +49,24 @@ public class PostService {
 
         Pageable pageable;
         pageable = PageRequest.of(offset, limit);
+
         Page<Post> postsPage;
 
-        if (mode.equals("recent")) {
-            postsPage = postRepository.findAllPostsByTimeDesc(pageable);
-        } else if (mode.equals("popular")) {
-            postsPage = postRepository.findAllPostsByCommentsDesc(pageable);
-        } else if (mode.equals("best")) {
-            postsPage = postRepository.findAllPostsByVotesDesc(pageable);
-        } else if (mode.equals("early")) {
-            postsPage = postRepository.findAllPostsByTime(pageable);
-        } else {
-            postsPage = postRepository.findAllPostsByTimeDesc(pageable);
+        switch (mode) {
+            case "popular":
+                pageable = PageRequest.of(offset, limit);
+                postsPage = postRepository.findAllPostsByCommentsDesc(pageable);
+                break;
+            case "best":
+                pageable = PageRequest.of(offset, limit);
+                postsPage = postRepository.findAllPostsByVotesDesc(pageable);
+                break;
+            case "early":
+                postsPage = postRepository.findAllPostsByTime(pageable);
+                break;
+            default:
+                postsPage = postRepository.findAllPostsByTimeDesc(pageable);
+                break;
         }
 
         return createPostsResponse(postsPage, postRepository.findAllPosts().size());
@@ -128,8 +136,7 @@ public class PostService {
         }
 //        post = postRepository.findPostById(id);
 
-        PostResponse postResponse = new PostResponse(commentResponseList, post, tagList);
-        return postResponse;
+        return new PostResponse(commentResponseList, post, tagList);
     }
 
 
@@ -176,31 +183,29 @@ public class PostService {
         Pageable pageable;
         pageable = PageRequest.of(offset, limit);
 
-        String email = "\'" + principal.getName() + "\'";
 
+        switch (status) {
+            case "inactive": {
 
-        if (status.equals("inactive")){
+                Page<Post> pageMy = postRepository.findPostsMyInactive(pageable, principal.getName());
+                return createPostsResponse(pageMy, (int) pageMy.getTotalElements());
 
-//            System.out.println("email - " + email);
+            }
+            case "pending": {
+                Page<Post> pageMy = postRepository.findPostsMyIsactive("NEW", principal.getName(), pageable);
+                return createPostsResponse(pageMy, (int) pageMy.getTotalElements());
 
-            Page<Post> pageMy = postRepository.findPostsMyInactive(pageable, principal.getName());
-            return createPostsResponse(pageMy, (int)pageMy.getTotalElements());
+            }
+            case "declined": {
+                Page<Post> pageMy = postRepository.findPostsMyIsactive("DECLINED", principal.getName(), pageable);
+                return createPostsResponse(pageMy, (int) pageMy.getTotalElements());
 
-        }
-        else if (status.equals("pending")){
-            Page<Post> pageMy = postRepository.findPostsMyIsactive("NEW", principal.getName(), pageable);
-            return createPostsResponse(pageMy, (int)pageMy.getTotalElements());
+            }
+            case "published": {
+                Page<Post> pageMy = postRepository.findPostsMyIsactive("ACCEPTED", principal.getName(), pageable);
+                return createPostsResponse(pageMy, (int) pageMy.getTotalElements());
 
-        }
-        else if (status.equals("declined")){
-            Page<Post> pageMy = postRepository.findPostsMyIsactive("DECLINED", principal.getName(), pageable);
-            return createPostsResponse(pageMy, (int)pageMy.getTotalElements());
-
-        }
-        else if (status.equals("published")){
-            Page<Post> pageMy = postRepository.findPostsMyIsactive("ACCEPTED", principal.getName(), pageable);
-            return createPostsResponse(pageMy, (int)pageMy.getTotalElements());
-
+            }
         }
 
         return null;
@@ -253,7 +258,7 @@ public class PostService {
         return postApiPostResponse;
     }
 
-    public PostApiPostResponse putPosts(long timestamp, byte active, String title, String text, List<String> tags, int id, Principal principal) {
+    public PostApiPostResponse putPosts(long timestamp, byte active, String title, String text, List<String> tags, int id) {
 
         Date datePost = setDatePost(timestamp);
 

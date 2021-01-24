@@ -1,13 +1,12 @@
 package main.service;
 
-import main.api.response.RegisterErrorResponse;
 import main.api.request.RegisterRequest;
+import main.api.response.RegisterErrorResponse;
 import main.api.response.RegisterResponse;
 import main.model.repo.CaptchaRepository;
 import main.model.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -44,17 +43,17 @@ public class RegisterService {
             registerErrorResponse.setCaptcha();
             result = false;
         }
-        if (registerRequest.getName().matches("[\\w]+") == false){
+        if (!registerRequest.getName().matches("[\\w]+")){
             registerErrorResponse.setName();
             result = false;
         }
 
-        if (result == false){
-            return new RegisterResponse(result, registerErrorResponse);
+        if (!result){
+            return new RegisterResponse(false, registerErrorResponse);
         }
         else {
             userRepository.insertUser(registerRequest.getE_mail(), registerRequest.getName(), new Date(), BCrypt.hashpw(registerRequest.getPassword(), BCrypt.gensalt(12)));
-            return new RegisterResponse(result);
+            return new RegisterResponse(true);
         }
 
     }

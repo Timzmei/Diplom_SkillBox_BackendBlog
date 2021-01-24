@@ -1,14 +1,9 @@
 package main.service;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import main.api.response.CalendarResponse;
-import main.api.response.PostsResponse;
 import main.model.Post;
 import main.model.repo.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -67,9 +62,7 @@ public class CalendarService {
 
         }
 
-        CalendarResponse calendarResponse = new CalendarResponse(years, posts);
 
-
-        return calendarResponse;
+        return new CalendarResponse(years, posts);
     }
 }

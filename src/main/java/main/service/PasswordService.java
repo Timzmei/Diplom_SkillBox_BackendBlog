@@ -3,13 +3,11 @@ package main.service;
 import main.api.request.PasswordRequest;
 import main.api.response.PasswordResponse;
 import main.api.response.ResultResponse;
-import main.model.User;
 import main.model.repo.CaptchaRepository;
 import main.model.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 

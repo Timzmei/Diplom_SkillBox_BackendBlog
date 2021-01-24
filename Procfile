@@ -1,0 +1,1 @@
+web: java -jar target/Diplom_SkillBox_BackendBlog-1.0.jar

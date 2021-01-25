@@ -134,11 +134,7 @@ public class PostService {
 
             post.setViewCount(post.getViewCount() + 1);
             postRepository.save(post);
-
-//            postRepository.updateViewPost(post.getId(), post.getViewCount() + 1);
         }
-//        post = postRepository.findPostById(id);
-
         return new PostResponse(commentResponseList, post, tagList);
     }
 

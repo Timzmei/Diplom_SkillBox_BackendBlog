@@ -21,6 +21,7 @@ public class StorageService {
     public ResponseEntity<Object> store(MultipartFile file) throws IOException {
         String folder = "upload";
 
+
         String[] uuidPath = UUID.randomUUID().toString().split("\\-", 3);
 
 

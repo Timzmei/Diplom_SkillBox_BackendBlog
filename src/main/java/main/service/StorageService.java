@@ -25,7 +25,7 @@ public class StorageService {
 
 
 
-        String resultPath = "/" + folder + "/" + uuidPath[0] + "/" + uuidPath[1] + "/" + uuidPath[2];
+        String resultPath = folder + "/" + uuidPath[0] + "/" + uuidPath[1] + "/" + uuidPath[2];
 
 
 
@@ -39,7 +39,7 @@ public class StorageService {
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
 
-        return new ResponseEntity<>(resultPath + "/" + file.getOriginalFilename(), HttpStatus.OK);
+        return new ResponseEntity<>("/" + resultPath + "/" + file.getOriginalFilename(), HttpStatus.OK);
     }
 
 //    Stream<Path> loadAll();

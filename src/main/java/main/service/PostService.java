@@ -234,6 +234,7 @@ public class PostService {
             post.setTitle(title);
             post.setText(text);
             post.setUser(user);
+            post.setModerationStatus(ModerationStatus.NEW);
 
             post = postRepository.save(post);
 

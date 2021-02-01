@@ -48,6 +48,19 @@ public class StatisticService {
         StatisticResponse statisticResponse = new StatisticResponse();
 
         List<Post> postList = postRepository.findMyPosts("ACCEPTED", principal.getName());
+        System.out.println(postList);
+
+        if (postList.size() == 0){
+
+            statisticResponse.setDislikesCount(0);
+            statisticResponse.setFirstPublication(0);
+            statisticResponse.setLikesCount(0);
+            statisticResponse.setPostsCount(0);
+            statisticResponse.setViewsCount(0);
+
+            return statisticResponse;
+
+        }
 
         int postsCount = postList.size();
         long likeCount = 0;

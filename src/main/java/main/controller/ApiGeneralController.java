@@ -80,7 +80,6 @@ public class ApiGeneralController {
     }
 
     @PostMapping("/api/image")
-    @PreAuthorize("hasAuthority('user:write')")
     private ResponseEntity<Object> fileUpload(@RequestParam("image") MultipartFile file) throws IOException {
         return storageService.store(file);
 

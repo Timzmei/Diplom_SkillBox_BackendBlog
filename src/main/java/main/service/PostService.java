@@ -122,8 +122,8 @@ public class PostService {
                     .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
             if (!(post.getUser().getId() == user.getId()) || user.getIsModerator() == 0) {
-                postRepository.updateViewPost(post.getId(), post.getViewCount() + 1);
-            }
+                post.setViewCount(post.getViewCount() + 1);
+                postRepository.save(post);            }
         }
         else {
             post = postRepository.findPostAcceptedById(id);
@@ -132,10 +132,9 @@ public class PostService {
                 return null;
             }
 
-            postRepository.updateViewPost(post.getId(), post.getViewCount() + 1);
+            post.setViewCount(post.getViewCount() + 1);
+            postRepository.save(post);
         }
-//        post = postRepository.findPostById(id);
-
         return new PostResponse(commentResponseList, post, tagList);
     }
 
@@ -235,6 +234,7 @@ public class PostService {
             post.setTitle(title);
             post.setText(text);
             post.setUser(user);
+            post.setModerationStatus(ModerationStatus.NEW);
 
             post = postRepository.save(post);
 

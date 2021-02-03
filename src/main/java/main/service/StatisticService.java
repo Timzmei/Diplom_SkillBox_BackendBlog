@@ -48,12 +48,25 @@ public class StatisticService {
         StatisticResponse statisticResponse = new StatisticResponse();
 
         List<Post> postList = postRepository.findMyPosts("ACCEPTED", principal.getName());
+        System.out.println(postList);
+
+        if (postList.size() == 0){
+
+            statisticResponse.setDislikesCount(0);
+            statisticResponse.setFirstPublication(0);
+            statisticResponse.setLikesCount(0);
+            statisticResponse.setPostsCount(0);
+            statisticResponse.setViewsCount(0);
+
+            return statisticResponse;
+
+        }
 
         int postsCount = postList.size();
         long likeCount = 0;
         long disLikeCount = 0;
         long viewsCount = 0;
-        long firstPublication = postList.get(0).getTime().getTime();
+        long firstPublication = postList.get(0).getTime().getTime() / 1000;
 
         for (Post p:
              postList) {
@@ -90,7 +103,7 @@ public class StatisticService {
         long likeCount = 0;
         long disLikeCount = 0;
         long viewsCount = 0;
-        long firstPublication = postList.get(0).getTime().getTime();
+        long firstPublication = postList.get(0).getTime().getTime() / 1000;
 
         for (Post p:
                 postList) {

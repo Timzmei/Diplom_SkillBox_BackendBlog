@@ -2,6 +2,7 @@ package main.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,14 +19,17 @@ public class StorageService {
 
 //    void init();
 
+    @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<Object> store(MultipartFile file) throws IOException {
         String folder = "upload";
 
-        String[] uuidPath = UUID.randomUUID().toString().split("\\-", 3);
+
+
+        String[] uuidPath = UUID.randomUUID().toString().split("-", 3);
 
 
 
-        String resultPath = "/" + folder + "/" + uuidPath[0] + "/" + uuidPath[1] + "/" + uuidPath[2];
+        String resultPath = folder + "/" + uuidPath[0] + "/" + uuidPath[1] + "/" + uuidPath[2];
 
 
 
@@ -39,7 +43,7 @@ public class StorageService {
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
 
-        return new ResponseEntity<>(resultPath + "/" + file.getOriginalFilename(), HttpStatus.OK);
+        return new ResponseEntity<>("/" + resultPath + "/" + file.getOriginalFilename(), HttpStatus.OK);
     }
 
 //    Stream<Path> loadAll();

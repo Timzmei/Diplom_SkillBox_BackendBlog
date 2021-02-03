@@ -129,7 +129,7 @@ public class ApiPostController {
     }
 
     @PostMapping("/like")
-    @PreAuthorize("hasAuthority('user:moderate')")
+    @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity postLike(
             @RequestBody LikeRequest likeRequest,
             Principal principal
@@ -138,7 +138,7 @@ public class ApiPostController {
     }
 
     @PostMapping("/dislike")
-    @PreAuthorize("hasAuthority('user:moderate')")
+    @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity postDislike(
             @RequestBody LikeRequest likeRequest,
             Principal principal

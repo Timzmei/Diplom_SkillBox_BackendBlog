@@ -47,18 +47,15 @@ public class PostService {
 //        early - сортировать по дате публикации, выводить сначала старые
 
 
-        Pageable pageable;
-        pageable = PageRequest.of(offset, limit);
+        Pageable pageable = PageRequest.of(offset / limit, limit);
 
         Page<Post> postsPage;
 
         switch (mode) {
             case "popular":
-                pageable = PageRequest.of(offset, limit);
                 postsPage = postRepository.findAllPostsByCommentsDesc(pageable);
                 break;
             case "best":
-                pageable = PageRequest.of(offset, limit);
                 postsPage = postRepository.findAllPostsByVotesDesc(pageable);
                 break;
             case "early":
@@ -74,7 +71,7 @@ public class PostService {
 
     public PostsResponse getPostsSearch(int offset, int limit, String query) {
         Pageable pageable;
-        pageable = PageRequest.of(offset, limit);
+        pageable = PageRequest.of(offset / limit, limit);
         Page<Post> pageOfTags = postRepository.findAllPostsBySearch(query, pageable);
 
         return createPostsResponse(pageOfTags, (int)pageOfTags.getTotalElements());
@@ -82,7 +79,7 @@ public class PostService {
 
     public PostsResponse getPostsByDate(int offset, int limit, String date) {
         Pageable pageable;
-        pageable = PageRequest.of(offset, limit);
+        pageable = PageRequest.of(offset / limit, limit);
         Page<Post> pageByDate = postRepository.findAllPostsByDate(date, pageable);
 
         return createPostsResponse(pageByDate, (int)pageByDate.getTotalElements());
@@ -90,7 +87,7 @@ public class PostService {
 
     public PostsResponse getPostsByTag(int offset, int limit, String tag) {
         Pageable pageable;
-        pageable = PageRequest.of(offset, limit);
+        pageable = PageRequest.of(offset / limit, limit);
         Page<Post> pageByTag = postRepository.findAllPostsByTag(tag, pageable);
 
         return createPostsResponse(pageByTag, (int)pageByTag.getTotalElements());
@@ -158,7 +155,7 @@ public class PostService {
 
     public PostsResponse getPostsModeration(int offset, int limit, String status, Principal principal) {
         Pageable pageable;
-        pageable = PageRequest.of(offset, limit);
+        pageable = PageRequest.of(offset / limit, limit);
 
         Page<Post> pageModerate;
 
@@ -180,7 +177,7 @@ public class PostService {
 
     public PostsResponse getPostsMy(int offset, int limit, String status, Principal principal) {
         Pageable pageable;
-        pageable = PageRequest.of(offset, limit);
+        pageable = PageRequest.of(offset / limit, limit);
 
 
         switch (status) {

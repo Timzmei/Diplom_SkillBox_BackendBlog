@@ -7,39 +7,39 @@ import main.model.User;
 import main.model.repo.UserRepository;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 public class UserService {
 
+    @Value("${upload.pathProfilePhoto}")
+    String folder;
+
+
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public String uploadPhoto(MultipartFile newPhoto, Principal principal) throws Exception {
-        String folder = "profile_photo";
+//        String folder = "profile_photo";
 
         User user = userRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
@@ -71,11 +71,6 @@ public class UserService {
         String newEmail = profileRequest.getEmail();
         String password = profileRequest.getPassword();
         Byte removePhoto = profileRequest.getRemovePhoto();
-
-//        System.out.println("profileRequest: " + profileRequest);
-//        System.out.println("Имя: " + name);
-//        System.out.println("почта: " + newEmail);
-//        System.out.println("пароль: " + password);
 
         MyProfileResponse myProfileResponse = new MyProfileResponse();
         myProfileResponse.setResult(true);

@@ -14,7 +14,11 @@ import java.util.List;
 public class TagService {
 
     @Autowired
-    private TagRepository tagRepository;
+    private final TagRepository tagRepository;
+
+    public TagService(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
+    }
 
 
     public TagsResponse getTags(String query) {

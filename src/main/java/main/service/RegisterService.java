@@ -15,9 +15,14 @@ import java.util.Date;
 public class RegisterService {
 
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     @Autowired
-    private CaptchaRepository captchaRepository;
+    private final CaptchaRepository captchaRepository;
+
+    public RegisterService(UserRepository userRepository, CaptchaRepository captchaRepository) {
+        this.userRepository = userRepository;
+        this.captchaRepository = captchaRepository;
+    }
 
     public RegisterResponse checkRegister(RegisterRequest registerRequest){
 

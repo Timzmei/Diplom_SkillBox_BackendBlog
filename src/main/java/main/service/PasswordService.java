@@ -15,10 +15,15 @@ import org.springframework.stereotype.Service;
 public class PasswordService {
 
     @Autowired
-    private CaptchaRepository captchaRepository;
+    private final CaptchaRepository captchaRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public PasswordService(CaptchaRepository captchaRepository, UserRepository userRepository) {
+        this.captchaRepository = captchaRepository;
+        this.userRepository = userRepository;
+    }
 
     public ResponseEntity checkCode(PasswordRequest passwordRequest) {
 

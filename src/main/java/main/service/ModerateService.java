@@ -18,10 +18,15 @@ import java.security.Principal;
 public class ModerateService {
 
     @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public ModerateService(PostRepository postRepository, UserRepository userRepository) {
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
+    }
 
     @SuppressWarnings("EqualsBetweenInconvertibleTypes")
     @PreAuthorize("hasAuthority('user:moderate')")

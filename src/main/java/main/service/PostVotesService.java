@@ -18,10 +18,15 @@ import java.util.Date;
 public class PostVotesService {
 
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    private PostVotesRepository postVotesRepository;
+    private final PostVotesRepository postVotesRepository;
+
+    public PostVotesService(UserRepository userRepository, PostVotesRepository postVotesRepository) {
+        this.userRepository = userRepository;
+        this.postVotesRepository = postVotesRepository;
+    }
 
 
     public ResponseEntity addLike(LikeRequest likeRequest, Principal principal) {

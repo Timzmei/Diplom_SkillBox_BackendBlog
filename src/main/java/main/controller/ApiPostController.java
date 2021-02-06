@@ -118,7 +118,7 @@ public class ApiPostController {
             @RequestBody PostRequest postRequest) {
 
 
-        return ResponseEntity.ok(postService.putPosts(
+        return ResponseEntity.ok(postService.addPosts(
                 postRequest.getTimestamp(),
                 postRequest.getActive(),
                 postRequest.getTitle(),

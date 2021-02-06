@@ -1,19 +1,14 @@
 package main.service;
 
-import main.api.response.PostResponse;
 import main.api.response.StatisticResponse;
 import main.model.Post;
 import main.model.PostVotes;
 import main.model.User;
 import main.model.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -25,22 +20,19 @@ import java.util.List;
 public class StatisticService {
 
     @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     @Autowired
-    private CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    private TagRepository tagRepository;
+    private final GlobalSettingsRepository globalSettingsRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private Tag2PostRepository tag2PostRepository;
-
-    @Autowired
-    private GlobalSettingsRepository globalSettingsRepository;
+    public StatisticService(PostRepository postRepository, UserRepository userRepository, GlobalSettingsRepository globalSettingsRepository) {
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
+        this.globalSettingsRepository = globalSettingsRepository;
+    }
 
     @PreAuthorize("hasAuthority('user:write')")
     public StatisticResponse getMy(Principal principal) {

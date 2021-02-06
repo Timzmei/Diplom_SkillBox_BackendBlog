@@ -1,5 +1,6 @@
 package main.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,11 +18,13 @@ import java.util.UUID;
 @Service
 public class StorageService {
 
-//    void init();
+    @Value("${upload.pathImage}")
+    String folder;
+
 
     @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<Object> store(MultipartFile file) throws IOException {
-        String folder = "upload";
+//        String folder = "upload";
 
 
 

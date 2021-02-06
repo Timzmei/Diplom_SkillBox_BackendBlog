@@ -13,18 +13,12 @@ import java.util.*;
 public class CalendarService {
 
 
-//    {
-//        "years": [2017, 2018, 2019, 2020],
-//        "posts": {
-//                "2019-12-17": 56,
-//                "2019-12-14": 11,
-//                "2019-06-17": 1,
-//                "2020-03-12": 6
-//    }
-//    }
-
     @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
+
+    public CalendarService(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
 
     public CalendarResponse getCalendar(String year) {
 

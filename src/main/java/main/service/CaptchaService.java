@@ -22,7 +22,11 @@ import java.util.Date;
 public class CaptchaService {
 
     @Autowired
-    private CaptchaRepository captchaRepository;
+    private final CaptchaRepository captchaRepository;
+
+    public CaptchaService(CaptchaRepository captchaRepository) {
+        this.captchaRepository = captchaRepository;
+    }
 
     public AuthCaptchaResponse getCaptcha() throws IOException {
 

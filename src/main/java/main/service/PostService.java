@@ -21,19 +21,27 @@ import java.util.List;
 public class PostService {
 
     @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     @Autowired
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    private TagRepository tagRepository;
+    private final TagRepository tagRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    private Tag2PostRepository tag2PostRepository;
+    private final Tag2PostRepository tag2PostRepository;
+
+    public PostService(PostRepository postRepository, CommentRepository commentRepository, TagRepository tagRepository, UserRepository userRepository, Tag2PostRepository tag2PostRepository) {
+        this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
+        this.tagRepository = tagRepository;
+        this.userRepository = userRepository;
+        this.tag2PostRepository = tag2PostRepository;
+    }
 
     public PostsResponse getPosts(int offset, int limit, String mode) {
         // тут пишем уже выбор запроса из репозитория по mode, простые if
@@ -140,9 +148,6 @@ public class PostService {
 
         List<PostResponseForList> postResponseList = new ArrayList<>();
         for (Post p : pageOfTags) {
-//            System.out.println(p.getComments());
-//            System.out.println(p.getLike());
-//            System.out.println(p.getTags());
 
             postResponseList.add(new PostResponseForList(p));
         }
@@ -255,7 +260,8 @@ public class PostService {
         return postApiPostResponse;
     }
 
-    public PostApiPostResponse putPosts(long timestamp, byte active, String title, String text, List<String> tags, int id) {
+    @Transactional
+    public PostApiPostResponse addPosts(long timestamp, byte active, String title, String text, List<String> tags, int id) {
 
         Date datePost = setDatePost(timestamp);
 

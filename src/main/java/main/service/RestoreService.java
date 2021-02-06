@@ -13,10 +13,15 @@ import java.util.UUID;
 public class RestoreService {
 
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    private MailSender mailSender;
+    private final MailSender mailSender;
+
+    public RestoreService(UserRepository userRepository, MailSender mailSender) {
+        this.userRepository = userRepository;
+        this.mailSender = mailSender;
+    }
 
     public ResultResponse checkEmail(String email) {
 

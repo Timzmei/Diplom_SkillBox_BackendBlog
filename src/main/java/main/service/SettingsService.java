@@ -13,7 +13,11 @@ import org.springframework.stereotype.Service;
 public class SettingsService {
 
     @Autowired
-    private GlobalSettingsRepository globalSettingsRepository;
+    private final GlobalSettingsRepository globalSettingsRepository;
+
+    public SettingsService(GlobalSettingsRepository globalSettingsRepository) {
+        this.globalSettingsRepository = globalSettingsRepository;
+    }
 
     public SettingsResponse getGlobalSettings(){
 //        System.out.println(globalSettingsRepository.findAllGlobalSettings("MULTIUSER_MODE").getValue());

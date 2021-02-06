@@ -21,13 +21,19 @@ import java.util.Date;
 public class CommentService {
 
     @Autowired
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public CommentService(CommentRepository commentRepository, PostRepository postRepository, UserRepository userRepository) {
+        this.commentRepository = commentRepository;
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
+    }
 
     @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity postComment(CommentRequest commentRequest, Principal principal) {

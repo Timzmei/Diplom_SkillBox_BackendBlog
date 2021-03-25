@@ -14,11 +14,10 @@ public class MailSender {
     private final JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
-    private final String username;
+    private String username;
 
-    public MailSender(JavaMailSender mailSender, String username) {
+    public MailSender(JavaMailSender mailSender) {
         this.mailSender = mailSender;
-        this.username = username;
     }
 
     public void mailSender(String mail, String subject, String message){

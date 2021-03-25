@@ -75,14 +75,18 @@ public class ApiAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) throws AuthenticationException {
-        Authentication auth = authenticationManager
-                .authenticate(
-                        new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        User user = (User) auth.getPrincipal();
+        User user = authentication(loginRequest.getEmail(), loginRequest.getPassword());
 
         return ResponseEntity.ok(getLoginResponse(user.getUsername()));
+    }
+
+    private User authentication(String email, String password) {
+        Authentication auth = authenticationManager
+                .authenticate(
+                        new UsernamePasswordAuthenticationToken(email, password));
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        return (User) auth.getPrincipal();
     }
 
     @GetMapping("/logout")

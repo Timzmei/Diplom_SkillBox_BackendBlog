@@ -1,6 +1,7 @@
-spring.datasource.url: jdbc:${CLEARDB_DATABASE_URL:mysql://${MYSQL_HOST:localhost}:3306/DevBlog?createDatabaseIfNotExist=true}
-spring.datasource.username: root
-spring.datasource.password: kol97szc
+#spring.datasource.url: jdbc:${CLEARDB_DATABASE_URL:mysql://${MYSQL_HOST:localhost}:3306/DevBlog?createDatabaseIfNotExist=true}
+spring.datasource.url: jdbc:${SPRING_DATASOURCE_URL:mysql://${MYSQL_HOST:localhost}:3306/DevBlog?createDatabaseIfNotExist=true}
+spring.datasource.username: ${SPRING_DATASOURCE_USERNAME:root}
+spring.datasource.password: ${SPRING_DATASOURCE_PASSWORD:kol97szc}
 spring:
   jpa:
     hibernate:
@@ -37,5 +38,10 @@ blog:
   copyright: <Буратино Карлович>
   copyrightFrom: 2005
 #spring.jpa.properties.hibernate.validator.apply_to_ddl=false
+
+
+#CLEARDB_DATABASE_URL=mysql://b4c52b0a8e2f04:c114b64c@eu-cdbr-west-03:
+#  cleardb:
+#    net/heroku_2a30d190e433cc9?useUnicode=true&characterEncoding=utf-8&reconnect=true:
 
 

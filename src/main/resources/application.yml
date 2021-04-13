@@ -1,6 +1,6 @@
 spring.datasource.url: jdbc:${CLEARDB_DATABASE_URL:mysql://${MYSQL_HOST:localhost}:3306/DevBlog?createDatabaseIfNotExist=true}
 spring.datasource.username: root
-spring.datasource.password: kol97szc
+spring.datasource.password: password
 spring:
   jpa:
     hibernate:

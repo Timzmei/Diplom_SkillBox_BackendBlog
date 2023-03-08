@@ -1,0 +1,41 @@
+spring.datasource.url: jdbc:${CLEARDB_DATABASE_URL:mysql://${MYSQL_HOST:localhost}:3306/DevBlog?createDatabaseIfNotExist=true}
+spring.datasource.username: root
+spring.datasource.password: password
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+    show-sql: false
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      enabled: true
+server:
+  port: ${PORT:8080}
+
+
+spring.mail:
+  host: smtp.mailtrap.io
+  username: 7deeb8027c6148
+  password: 4f4a0cf4d2e697
+  port: 2525
+mail.debug: true
+
+
+#spring.mandatory-file-encoding=UTF-8
+#spring.http.encoding.charset=UTF-8
+#spring.http.encoding.enabled=true
+
+blog:
+  title: DevPub
+  subtitle: Рассказы разработчиков
+  phone: +7 903 111-11-11
+  email: mail@mail.ru"
+  copyright: <Буратино Карлович>
+  copyrightFrom: 2005
+#spring.jpa.properties.hibernate.validator.apply_to_ddl=false
+
+

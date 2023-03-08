@@ -1,10 +1,6 @@
 package main.model.repo;
 
-import main.model.GlobalSettings;
-import main.model.Post;
 import main.model.PostVotes;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -2,7 +2,6 @@ package main.api.response;
 
 import main.model.Post;
 import main.model.User;
-import org.springframework.stereotype.Component;
 
 public class UserPostResponse {
 

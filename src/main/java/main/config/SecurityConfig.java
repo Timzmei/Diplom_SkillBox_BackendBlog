@@ -73,22 +73,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return daoAuthenticationProvider;
     }
 
-//    @Bean
-//    protected UserDetailsService userDetailsService(){
-////        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//        return new InMemoryUserDetailsManager(
-//                User.builder()
-//                        .username("user")
-//                        .password(passwordEncoder().encode("user"))
-//                        .authorities(Role.USER.getAuthorities())
-//                        .build(),
-//                User.builder()
-//                        .username("moderator")
-//                        .password(passwordEncoder().encode("moderator"))
-//                        .authorities(Role.MODERATOR.getAuthorities())
-//                        .build());
-//    }
-
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(12);

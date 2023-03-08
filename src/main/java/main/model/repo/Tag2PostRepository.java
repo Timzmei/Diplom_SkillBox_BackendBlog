@@ -1,6 +1,5 @@
 package main.model.repo;
 
-import main.model.Post;
 import main.model.Tags2Post;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
